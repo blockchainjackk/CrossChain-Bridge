@@ -1,0 +1,97 @@
+PairID = "USDT"
+DiffDecimals = false
+
+# source token config
+[SrcToken]
+# ID must be ERC20 if source token is erc20 token
+ID = "ERC20"
+Name = "antpool USD"
+Symbol = "USDT"
+Decimals = 6
+Description = "antpool USD"
+# if ID is ERC20, this is the erc20 token's contract address
+ContractAddress = "0x98662A1e391697C844E6405f3A32A897413BAb8f"
+# account4 priky  as DCRM
+DcrmAddressPriKey = "47f909f570c10408b254ca6c11f0935fb65e0f2379e752ddfccd9a475691e43e"
+
+# deposit to this address to make swap
+#account4
+DepositAddress = "0x040C22254EE46d612978496283d2565e39b817e0"
+# withdraw from this address
+DcrmAddress = "0x040C22254EE46d612978496283d2565e39b817e0"
+# dcrm address public key
+# todo
+DcrmPubkey = "041140a1c83692e2644934b7666d6f2871df30340ba08e017cfa555265f88fbf1181c073870014ea3ed46e7144a1c010fb08a151917077ad5043f23f5ab5a57850"
+
+# maximum deposit value
+MaximumSwap = 1000.0
+# minimum deposit value
+MinimumSwap = 0.00001
+# calced deposit fee = deposit value * this rate (when in [min, max] deposit fee range)
+SwapFeeRate = 0.001
+# maximum deposit fee, if calced deposit fee is larger than this fee, then use this value as deposit fee
+MaximumSwapFee = 0.01
+# minimum deposit fee, if calced deposit fee is smaller than this fee, then use this value as deposit fee
+MinimumSwapFee = 0.00001
+# plus this percentage of gas price to make tx more easier to be mined in source chain
+# corresponding to send asset on source chain (eg. BTC) for withdrawing
+PlusGasPricePercentage = 15 # plus 15% gas price
+# if deposit value is larger than this value then need more verify strategy
+# 在 CalcAndStoreValue 中会结合Decimals做计算，所以 500 就代表500个token 不需要写成500000000
+BigValueThreshold = 500.0
+# disable deposit function if this flag is true
+DisableSwap = false
+# default gas limit
+DefaultGasLimit = 90000
+# allow swapin from contract address
+AllowSwapinFromContract = false
+# big value whitelist
+BigValueWhitelist = [
+	"0x1111111111111111111111111111111111111111",
+	"0x2222222222222222222222222222222222222222"
+]
+
+# dest token config
+[DestToken]
+ID = "ERC20"
+Name = "multichain usdt"
+Symbol = "anyUSDT"
+Decimals = 6
+Description = "cross chain bridge usdt with anyUSDT"
+# mapping erc20 token address
+ContractAddress = "0x7756d6D7fdF238ac5e8Bf6976307CF6F96aA7E65"
+
+# mutichain2 priky  as DCRM
+DcrmAddressPriKey = "1ffa05c8f791460d868c8fbc71496f1a7c2a10cc0a3063554b12849c22a2955e"
+
+
+# mapping erc20 token creator
+DcrmAddress = "0x30542709eaEA5Db50bFD00B00FCcA150192c5a60"
+# dcrm address public key
+DcrmPubkey = "04c1d78f946714f3573bf9f3596a9f8e2bc6f423ea1f37fede76e2da914134e3e699aa820a2e3fc64a1e0c5b11914c9338b7ae046fdbf76841521972bdf16e79bb"
+# maximum withdraw value
+MaximumSwap = 100.0
+# minimum withdraw value
+MinimumSwap = 0.00001
+# calced withdraw fee = withdraw value * this rate (when in [min, max] withdraw fee range)
+SwapFeeRate = 0.001
+# maximum withdraw fee, if calced withdraw fee is larger than this fee, then use this value as withdraw fee
+MaximumSwapFee = 0.01
+# minimum withdraw fee, if calced withdraw fee is smaller than this fee, then use this value as withdraw fee
+MinimumSwapFee = 0.00001
+# plus this percentage of gas price to make tx more easier to be mined in dest chain
+# corresponding to send mapping token on dest chain (eg. mBTC) for depositing
+PlusGasPricePercentage = 1 # plus 1% gas price
+# if withdraw value is larger than this value then need more verify strategy
+BigValueThreshold = 500.0
+# disable withdraw function if this flag is true
+DisableSwap = false
+# default gas limit
+DefaultGasLimit = 90000
+# allow swapout from contract address
+AllowSwapoutFromContract = false
+# big value whitelist
+BigValueWhitelist = [
+	"0x1111111111111111111111111111111111111111",
+	"0x2222222222222222222222222222222222222222"
+]
