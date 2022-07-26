@@ -24,6 +24,7 @@ type CrossChainBridge interface {
 	BuildRawTransaction(args *BuildTxArgs) (rawTx interface{}, err error)
 	SignTransaction(rawTx interface{}, pairID string) (signedTx interface{}, txHash string, err error)
 	DcrmSignTransaction(rawTx interface{}, args *BuildTxArgs) (signedTx interface{}, txHash string, err error)
+	MultiSignTransaction(rawTx interface{}, args *BuildTxArgs) (signedTx interface{}, txHash string, err error)
 	SendTransaction(signedTx interface{}) (txHash string, err error)
 
 	GetLatestBlockNumber() (uint64, error)

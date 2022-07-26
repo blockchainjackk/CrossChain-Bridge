@@ -110,6 +110,77 @@ func (b *Bridge) DcrmSignTransaction(rawTx interface{}, args *tokens.BuildTxArgs
 	return signedTx, txhash, nil
 }
 
+// MultiSignTransaction dcrm sign raw tx
+func (b *Bridge) MultiSignTransaction(rawTx interface{}, args *tokens.BuildTxArgs) (signedTx interface{}, txHash string, err error) {
+	log.Debug("Ripple DcrmSignTransaction")
+
+	tx, ok := rawTx.(*data.Payment)
+	if !ok {
+		return nil, "", fmt.Errorf("Type assertion error, transaction is not a payment")
+	}
+
+	err = b.verifyTransactionWithArgs(tx, args)
+	if err != nil {
+		log.Warn("Verify transaction failed", "error", err)
+		return nil, "", err
+	}
+
+	jsondata, _ := json.Marshal(args.GetExtraArgs())
+	msgContext := string(jsondata)
+	msgHash, msg, err := data.SigningHash(tx)
+	if err != nil {
+		return nil, "", fmt.Errorf("Get transaction signing hash failed: %w", err)
+	}
+	msg = append(tx.SigningPrefix().Bytes(), msg...)
+
+	pubkeyStr := b.GetDcrmPublicKey(args.PairID)
+	pubkey := common.FromHex(pubkeyStr)
+	isEd := isEd25519Pubkey(pubkey)
+
+	var signContent string
+	var signType string
+
+	if isEd {
+		// dcrm ed public key has no 0xed prefix
+		pubkeyStr = pubkeyStr[2:]
+		// the real sign content is (signing prefix + msg)
+		// when we hex encoding here, the dcrm should do hex decoding there.
+		signContent = common.ToHex(msg)
+		signType = dcrm.SignTypeEC256K1
+	} else {
+		signContent = msgHash.String()
+		signType = dcrm.SignTypeED25519
+	}
+
+	keyID, rsvs, err := dcrm.DoSignOne(signType, pubkeyStr, signContent, msgContext)
+	if err != nil {
+		return nil, "", err
+	}
+	log.Info(b.ChainConfig.BlockChain+" DcrmSignTransaction finished", "keyID", keyID, "signContent", signContent, "txid", args.SwapID)
+
+	if len(rsvs) != 1 {
+		return nil, "", fmt.Errorf("get sign status require one rsv but have %v (keyID = %v)", len(rsvs), keyID)
+	}
+
+	rsv := rsvs[0]
+	log.Trace(b.ChainConfig.BlockChain+" DcrmSignTransaction get rsv success", "keyID", keyID, "rsv", rsv)
+
+	sig := rsvToSig(rsv, isEd)
+	valid, err := rcrypto.Verify(pubkey, msgHash.Bytes(), msg, sig)
+	if !valid || err != nil {
+		return nil, "", fmt.Errorf("verify signature error (valid: %v): %v", valid, err)
+	}
+
+	signedTx, err = b.MakeSignedTransaction(pubkey, rsv, rawTx)
+	if err != nil {
+		return signedTx, "", err
+	}
+
+	txhash := signedTx.(data.Transaction).GetHash().String()
+
+	return signedTx, txhash, nil
+}
+
 // SignTransaction sign tx with pairID
 func (b *Bridge) SignTransaction(rawTx interface{}, pairID string) (signedTx interface{}, txHash string, err error) {
 	privKey := b.GetTokenConfig(pairID).GetDcrmAddressPrivateKey()
