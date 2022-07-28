@@ -90,8 +90,25 @@ func (b *Bridge) DcrmSignTransaction(rawTx interface{}, args *tokens.BuildTxArgs
 }
 
 // MultiSign dcrm sign raw tx
-func (b *Bridge) MultiSign(erc20contract, receiver common.Address, swapValue, nonce *big.Int) (vs []uint8, rs [][]byte, ss [][]byte, err error) {
-	return nil, nil, nil, err
+func (b *Bridge) MultiSign(erc20contract, receiver common.Address, swapValue, nonce *big.Int) ([]uint8, [][32]byte, [][32]byte, error) {
+	vs, rs, ss := MultiSing(erc20contract, receiver, swapValue)
+	var rsHexArry [][32]byte
+	for _, rs := range rs {
+		value := [32]byte{}
+		copy(value[:], rs)
+		rsHexArry = append(rsHexArry, value)
+	}
+	//fmt.Println("rs : ", rsHexArry)
+
+	var ssHesArry [][32]byte
+	for _, ss := range ss {
+		value := [32]byte{}
+		copy(value[:], ss)
+		ssHesArry = append(ssHesArry, value)
+	}
+	//fmt.Println("ss : ", ssHesArry)
+
+	return vs, rsHexArry, ssHesArry, nil
 }
 
 func (b *Bridge) signTxWithSignature(tx *types.Transaction, signature []byte, signerAddr common.Address) (*types.Transaction, error) {

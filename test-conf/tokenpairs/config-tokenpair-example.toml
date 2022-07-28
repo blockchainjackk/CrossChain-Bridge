@@ -59,7 +59,10 @@ Symbol = "anyUSDT"
 Decimals = 6
 Description = "cross chain bridge usdt with anyUSDT"
 # mapping erc20 token address
-ContractAddress = "0x7756d6D7fdF238ac5e8Bf6976307CF6F96aA7E65"
+#ContractAddress = "0x7756d6D7fdF238ac5e8Bf6976307CF6F96aA7E65"
+
+# mapping multi erc20 token address
+ContractAddress = "0xCb2D9214Eb72b791fa6e185F57c834CD15BCF202"
 
 # send swapin tx to multianyyswaptoken contract (best set contract  creator)
 MultiContractSenderPrikey = "1ffa05c8f791460d868c8fbc71496f1a7c2a10cc0a3063554b12849c22a2955e"

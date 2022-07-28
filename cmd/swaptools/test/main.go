@@ -21,7 +21,7 @@ const Erc20Contract = "0xCb2D9214Eb72b791fa6e185F57c834CD15BCF202"
 const DESTADDRESS = "0xbD444ad8Fe2B8A0626B1311774543023D50592B6"
 const TXHash = "0x412e70c6c6e0b38ec0c29885dc1cbbd2c9e269681659248f185e87e188e4622c"
 
-const ABIPATH = "/Users/boom/bitmain/projects/crosschain/antpool/CrossChain-Bridge/cmd/swaptools/test/token.abi"
+const ABIPATH = "./cmd/swaptools/test/token.abi"
 
 var SwapValue int64 = 100000000
 
@@ -58,28 +58,28 @@ func main() {
 func BuildMultiSwapInTxInput(txHash string, receiver string, swapValue int64, erc20Contract string,
 	vs []uint8, rs [][]byte, ss [][]byte) []byte {
 
-	funcHash := common.FromHex("0xef52ef1d")
+	//funcHash := common.FromHex("0xef52ef1d")
 	txHash1 := common.HexToHash(txHash)
 	receiverAddress := common.HexToAddress(receiver)
 	//value := big.NewInt(swapValue)
 	value256 := common.LeftPadBytes(big.NewInt(swapValue).Bytes(), 32)
 	value := new(big.Int).SetBytes(value256)
 
-	var rsHexArry [][32]byte
-	for _, rs := range rs {
-		value := [32]byte{}
-		copy(value[:], rs)
-		rsHexArry = append(rsHexArry, value)
-	}
-	fmt.Println("rs : ", rsHexArry)
-
-	var ssHesArry [][32]byte
-	for _, ss := range ss {
-		value := [32]byte{}
-		copy(value[:], ss)
-		ssHesArry = append(ssHesArry, value)
-	}
-	fmt.Println("ss : ", ssHesArry)
+	//var rsHexArry [][32]byte
+	//for _, rs := range rs {
+	//	value := [32]byte{}
+	//	copy(value[:], rs)
+	//	rsHexArry = append(rsHexArry, value)
+	//}
+	//fmt.Println("rs : ", rsHexArry)
+	//
+	//var ssHesArry [][32]byte
+	//for _, ss := range ss {
+	//	value := [32]byte{}
+	//	copy(value[:], ss)
+	//	ssHesArry = append(ssHesArry, value)
+	//}
+	//fmt.Println("ss : ", ssHesArry)
 
 	erc20ContractAddress := common.HexToAddress(erc20Contract)
 
@@ -92,17 +92,18 @@ func BuildMultiSwapInTxInput(txHash string, receiver string, swapValue int64, er
 	if err != nil {
 		log.Fatalln(err)
 	}
+	//  myAbi.Pack("MultiSwapin", txHash, receiver, swapValue, tokenContract, vs, rs, ss)
 	Abiinput, err := myAbi.Pack("MultiSwapin", txHash1, receiverAddress, value, erc20ContractAddress,
-		vs, rsHexArry, ssHesArry)
+		vs, rs, ss)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	fmt.Println("ABI  MultiSwapInTxInput: ", common.ToHex(Abiinput))
 
-	input := abicoder.PackDataWithFuncHash(funcHash, txHash1, receiverAddress, value, erc20ContractAddress,
-		vs, rsHexArry, ssHesArry)
+	//input := abicoder.PackDataWithFuncHash(funcHash, txHash1, receiverAddress, value, erc20ContractAddress,
+	//	vs, rsHexArry, ssHesArry)
 
-	return input
+	return Abiinput
 }
 
 //"ec126c77": "Swapin(bytes32,address,uint256)",
