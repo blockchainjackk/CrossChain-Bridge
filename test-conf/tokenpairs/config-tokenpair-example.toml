@@ -61,9 +61,11 @@ Description = "cross chain bridge usdt with anyUSDT"
 # mapping erc20 token address
 ContractAddress = "0x7756d6D7fdF238ac5e8Bf6976307CF6F96aA7E65"
 
-# mutichain2 priky  as DCRM
-DcrmAddressPriKey = "1ffa05c8f791460d868c8fbc71496f1a7c2a10cc0a3063554b12849c22a2955e"
+# send swapin tx to multianyyswaptoken contract (best set contract  creator)
+MultiContractSenderPrikey = "1ffa05c8f791460d868c8fbc71496f1a7c2a10cc0a3063554b12849c22a2955e"
 
+# mutichain2 priky  as DCRM, 如果定义了就不去验证下面的地址和公钥了
+DcrmAddressPriKey = "1ffa05c8f791460d868c8fbc71496f1a7c2a10cc0a3063554b12849c22a2955e"
 
 # mapping erc20 token creator
 DcrmAddress = "0x30542709eaEA5Db50bFD00B00FCcA150192c5a60"

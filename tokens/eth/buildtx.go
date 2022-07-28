@@ -51,9 +51,13 @@ func (b *Bridge) BuildRawTransaction(args *tokens.BuildTxArgs) (rawTx interface{
 		return nil, err
 	}
 
+	token := b.GetTokenConfig(args.PairID)
 	switch args.SwapType {
 	case tokens.SwapinType:
-		err = b.buildSwapinTxInput(args)
+		if token.MultiContractSenderPrikey == "" && token.DcrmAddressPriKey != "" {
+			err = b.buildSwapinTxInput(args)
+		}
+		err = b.buildMultiSwapinTxInput(args)
 	case tokens.SwapoutType:
 		err = b.buildSwapoutTxInput(args)
 	default:

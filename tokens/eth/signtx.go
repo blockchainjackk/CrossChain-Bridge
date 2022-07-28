@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math/big"
 	"strings"
 
 	"github.com/anyswap/CrossChain-Bridge/common"
@@ -88,55 +89,9 @@ func (b *Bridge) DcrmSignTransaction(rawTx interface{}, args *tokens.BuildTxArgs
 	return signedTx, txHash, nil
 }
 
-// MultiSignTransaction dcrm sign raw tx
-func (b *Bridge) MultiSignTransaction(rawTx interface{}, args *tokens.BuildTxArgs) (signTx interface{}, txHash string, err error) {
-	tx, err := b.verifyTransactionWithArgs(rawTx, args)
-	if err != nil {
-		return nil, "", err
-	}
-	if !b.ChainConfig.EnableDynamicFeeTx {
-		gasPrice, errt := b.getGasPrice(args)
-		if errt == nil && args.Extra.EthExtra.GasPrice.Cmp(gasPrice) < 0 {
-			log.Info(b.ChainConfig.BlockChain+" DcrmSignTransaction update gas price", "txid", args.SwapID, "oldGasPrice", args.Extra.EthExtra.GasPrice, "newGasPrice", gasPrice)
-			args.Extra.EthExtra.GasPrice = gasPrice
-			tx.SetGasPrice(gasPrice)
-		}
-	}
-	signer := b.Signer
-	msgHash := signer.Hash(tx)
-	jsondata, _ := json.Marshal(args.GetExtraArgs())
-	msgContext := string(jsondata)
-
-	log.Info(b.ChainConfig.BlockChain+" DcrmSignTransaction start", "msghash", msgHash.String(), "txid", args.SwapID)
-	keyID, rsvs, err := dcrm.DoSignOneEC(b.GetDcrmPublicKey(args.PairID), msgHash.String(), msgContext)
-	if err != nil {
-		return nil, "", err
-	}
-	log.Info(b.ChainConfig.BlockChain+" DcrmSignTransaction finished", "keyID", keyID, "msghash", msgHash.String(), "txid", args.SwapID)
-
-	if len(rsvs) != 1 {
-		return nil, "", fmt.Errorf("get sign status require one rsv but have %v (keyID = %v)", len(rsvs), keyID)
-	}
-
-	rsv := rsvs[0]
-	log.Trace(b.ChainConfig.BlockChain+" DcrmSignTransaction get rsv success", "keyID", keyID, "txid", args.SwapID, "rsv", rsv)
-	signature := common.FromHex(rsv)
-	if len(signature) != crypto.SignatureLength {
-		log.Error("DcrmSignTransaction wrong length of signature")
-		return nil, "", errors.New("wrong signature of keyID " + keyID)
-	}
-
-	token := b.GetTokenConfig(args.PairID)
-	signedTx, err := b.signTxWithSignature(tx, signature, common.HexToAddress(token.DcrmAddress))
-	if err != nil {
-		return nil, "", err
-	}
-	txHash, err = b.CalcTransactionHash(signedTx)
-	if err != nil {
-		return nil, "", fmt.Errorf("calc signed tx hash failed, %w", err)
-	}
-	log.Info(b.ChainConfig.BlockChain+" DcrmSignTransaction success", "keyID", keyID, "txid", args.SwapID, "txhash", txHash, "nonce", signedTx.Nonce())
-	return signedTx, txHash, nil
+// MultiSign dcrm sign raw tx
+func (b *Bridge) MultiSign(erc20contract, receiver common.Address, swapValue, nonce *big.Int) (vs []uint8, rs [][]byte, ss [][]byte, err error) {
+	return nil, nil, nil, err
 }
 
 func (b *Bridge) signTxWithSignature(tx *types.Transaction, signature []byte, signerAddr common.Address) (*types.Transaction, error) {

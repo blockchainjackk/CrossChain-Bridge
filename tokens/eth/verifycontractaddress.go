@@ -19,6 +19,10 @@ var (
 	swapinFuncHash = common.FromHex("0xec126c77")
 	logSwapinTopic = common.FromHex("0x05d0634fe981be85c22e2942a880821b70095d84e152c3ea3c17a4e4250d9d61")
 
+	// first 4 bytes of `Keccak256Hash([]byte("Swapin(bytes32,address,uint256)"))`
+	multiswapinFuncHash = common.FromHex("0xec126c77")
+	logmultiSwapinTopic = common.FromHex("0x05d0634fe981be85c22e2942a880821b70095d84e152c3ea3c17a4e4250d9d61")
+
 	// first 4 bytes of `Keccak256Hash([]byte("Swapout(uint256,string)"))`
 	mBTCSwapoutFuncHash = common.FromHex("0xad54056d")
 	mBTCLogSwapoutTopic = common.FromHex("0x9c92ad817e5474d30a4378deface765150479363a897b0590fbb12ae9d89396b")
@@ -38,10 +42,11 @@ var mBTCExtCodeParts = map[string][]byte{
 
 var mETHExtCodeParts = map[string][]byte{
 	// Extended interfaces
-	"SwapinFuncHash":  swapinFuncHash,
-	"LogSwapinTopic":  logSwapinTopic,
-	"SwapoutFuncHash": mETHSwapoutFuncHash,
-	"LogSwapoutTopic": mETHLogSwapoutTopic,
+	"SwapinFuncHash":      swapinFuncHash,
+	"LogSwapinTopic":      logSwapinTopic,
+	"SwapoutFuncHash":     mETHSwapoutFuncHash,
+	"LogSwapoutTopic":     mETHLogSwapoutTopic,
+	"MultiSwapinFuncHash": multiswapinFuncHash,
 }
 
 var erc20CodeParts = map[string][]byte{
@@ -159,6 +164,10 @@ func isSwapoutToStringAddress() bool {
 
 func getSwapinFuncHash() []byte {
 	return ExtCodeParts["SwapinFuncHash"]
+}
+
+func getMultiSwapinFuncHash() []byte {
+	return ExtCodeParts["MultiSwapinFuncHash"]
 }
 
 func getLogSwapoutTopic() (topTopic []byte, topicsLen int) {

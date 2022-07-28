@@ -392,9 +392,12 @@ func (b *Bridge) SendSignedTransaction(tx *types.Transaction) (txHash string, er
 	for _, url := range gateway.APIAddress {
 		go sendRawTransaction(wg, hexData, url, ch)
 	}
-	for _, url := range gateway.APIAddressExt {
-		go sendRawTransaction(wg, hexData, url, ch)
+	if gateway.APIAddressExt != nil {
+		for _, url := range gateway.APIAddressExt {
+			go sendRawTransaction(wg, hexData, url, ch)
+		}
 	}
+
 	for i := 0; i < urlCount; i++ {
 		res := <-ch
 		txHash, err = res.txHash, res.err

@@ -131,6 +131,11 @@ var (
 		Usage: "value can be swapin or swapout",
 		Value: "swapin",
 	}
+	// PrivateKeyFlag --privateKey
+	PrivateKeyFlag = &cli.StringFlag{
+		Name:  "privateKey",
+		Usage: "privateKey ",
+	}
 )
 
 // SetLogger set log level, json format, color, rotate ...

@@ -156,7 +156,7 @@ MaxReplaceCount = 20
 # use fixed gas price (no adjust)
 FixedGasPrice = "5000000001"
 # maximum gas price
-MaxGasPrice = "50000000000"
+MaxGasPrice =  "50000000000"
 # minimum reserve coin for gas provide (defaults to 1e17 wei)
 MinReserveFee = "100000000000000000"
 # dynamic fee tx related (EIP-1559)

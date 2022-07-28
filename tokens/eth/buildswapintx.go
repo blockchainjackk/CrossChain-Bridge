@@ -41,6 +41,43 @@ func (b *Bridge) buildSwapinTxInput(args *tokens.BuildTxArgs) (err error) {
 	return nil
 }
 
+// build input for calling `Swapin(bytes32 txhash, address account, uint256 amount)`
+func (b *Bridge) buildMultiSwapinTxInput(args *tokens.BuildTxArgs) (err error) {
+	token := b.GetTokenConfig(args.PairID)
+	if token == nil {
+		return tokens.ErrUnknownPairID
+	}
+
+	receiver := common.HexToAddress(args.Bind)
+	if receiver == (common.Address{}) || !common.IsHexAddress(args.Bind) {
+		log.Warn("swapin to wrong address", "receiver", args.Bind)
+		return errInvalidReceiverAddress
+	}
+
+	swapValue := tokens.CalcSwappedValue(args.PairID, args.OriginValue, true, args.OriginFrom, args.OriginTxTo)
+	swapValue, err = b.adjustSwapValue(args, swapValue)
+	if err != nil {
+		return err
+	}
+	args.SwapValue = swapValue // swap value
+
+	funcHash := getSwapinFuncHash()
+	txHash := common.HexToHash(args.SwapID)
+
+	tokenContract := common.HexToAddress(token.ContractAddress)
+	vs, rs, ss, err := b.MultiSign(tokenContract, receiver, swapValue, nil)
+
+	//todo
+	input := abicoder.PackDataWithFuncHash(funcHash, txHash, receiver, swapValue, tokenContract, vs, rs, ss)
+	args.Input = &input             // input
+	args.To = token.ContractAddress // to
+
+	if token.IsDelegateContract && !token.IsAnyswapAdapter {
+		return b.checkBalance(token.DelegateToken, token.ContractAddress, swapValue)
+	}
+	return nil
+}
+
 func (b *Bridge) adjustSwapValue(args *tokens.BuildTxArgs, swapValue *big.Int) (*big.Int, error) {
 	isDynamicFeeTx := b.ChainConfig.EnableDynamicFeeTx
 	if isDynamicFeeTx {

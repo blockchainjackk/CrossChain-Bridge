@@ -2,11 +2,10 @@
 package abicoder
 
 import (
-	"math/big"
-
 	"github.com/anyswap/CrossChain-Bridge/common"
 	"github.com/anyswap/CrossChain-Bridge/common/hexutil"
 	"github.com/anyswap/CrossChain-Bridge/log"
+	"math/big"
 )
 
 // PackDataWithFuncHash pack data with func hash
@@ -73,7 +72,13 @@ func PackData(args ...interface{}) []byte {
 		case [][]byte:
 			offset := big.NewInt(int64(len(bs)))
 			copy(bs[i*32:], packBigInt(offset))
-			bs = append(bs, packBytesSlice(v)...)
+			s := packBytesSlice(v)
+			bs = append(bs, s...)
+		case [][32]byte:
+			offset := big.NewInt(int64(len(bs)))
+			copy(bs[i*32:], packBigInt(offset))
+			s := packBytes32Slice(v)
+			bs = append(bs, s...)
 		default:
 			log.Fatalf("unsupported to pack %v (%T)", v, v)
 		}
@@ -109,6 +114,17 @@ func packString(str string) []byte {
 	return bs
 }
 
+func packBytes32(data [32]byte) []byte {
+	bsLen := len(data)
+	paddedLen := (bsLen + 31) / 32 * 32
+
+	bs := make([]byte, 32+paddedLen)
+
+	copy(bs[:32], packBigInt(big.NewInt(int64(bsLen))))
+	copy(bs[32:], data[:])
+
+	return bs
+}
 func packBytes(data []byte) []byte {
 	bsLen := len(data)
 	paddedLen := (bsLen + 31) / 32 * 32
@@ -173,6 +189,17 @@ func packBytesSlice(bsSlice [][]byte) []byte {
 	for i, bs := range bsSlice {
 		copy(bsInner[i*32:], packBigInt(big.NewInt(int64(len(bsInner)))))
 		bsInner = append(bsInner, packBytes(bs)...)
+	}
+	return append(bsLen, bsInner...)
+}
+
+func packBytes32Slice(bsSlice [][32]byte) []byte {
+	length := len(bsSlice)
+	bsLen := packBigInt(big.NewInt(int64(length)))
+	bsInner := make([]byte, length*32)
+	for i, bs := range bsSlice {
+		copy(bsInner[i*32:], packBigInt(big.NewInt(int64(len(bsInner)))))
+		bsInner = append(bsInner, packBytes32(bs)...)
 	}
 	return append(bsLen, bsInner...)
 }

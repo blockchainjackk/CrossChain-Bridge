@@ -144,6 +144,8 @@ type TokenConfig struct {
 
 	BigValueWhitelist []string `json:",omitempty"`
 
+	//MutilContrctSenderPirkey
+	MultiContractSenderPrikey string `json:"-"`
 	// use private key address instead
 	DcrmAddressPriKey string `json:"-"`
 
@@ -568,6 +570,18 @@ func (c *TokenConfig) GetDcrmAddressPrivateKey() *string {
 		return nil
 	}
 	return &c.DcrmAddressPriKey
+}
+
+// GetDcrmAddressPrivateKey get private key
+func (c *TokenConfig) GetMultiContractSenderPrikey() *string {
+	// get rid of '0x' prefix
+	if common.HasHexPrefix(c.MultiContractSenderPrikey) {
+		c.MultiContractSenderPrikey = c.MultiContractSenderPrikey[2:]
+	}
+	if c.MultiContractSenderPrikey == "" {
+		return nil
+	}
+	return &c.MultiContractSenderPrikey
 }
 
 // VerifyDcrmPublicKey verify public key
