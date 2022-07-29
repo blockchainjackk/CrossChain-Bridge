@@ -51,6 +51,15 @@ type BridgeConfig struct {
 	BtcExtra    *tokens.BtcExtraConfig `toml:",omitempty" json:",omitempty"`
 	Extra       *ExtraConfig           `toml:",omitempty" json:",omitempty"`
 	Dcrm        *DcrmConfig            `toml:",omitempty" json:",omitempty"`
+	PoaChain    *PoaChainConfig        `toml:",omitempty" json:",omitempty"`
+}
+
+//POA'chain config
+type PoaChainConfig struct {
+	HttpClientUrl                []string
+	WebsocketClientUrl           []string
+	KeyManagerContractAddressHex string
+	KeyManagerOwnerPrivateKey    string
 }
 
 // ServerConfig swap server config
@@ -223,6 +232,11 @@ func GetExtraConfig() *ExtraConfig {
 // GetTokenPriceConfig get token price config
 func GetTokenPriceConfig() *tokens.TokenPriceConfig {
 	return GetConfig().TokenPrice
+}
+
+//get Poa's chain config
+func GetPoaConfig() *PoaChainConfig {
+	return GetConfig().PoaChain
 }
 
 // LoadConfig load config

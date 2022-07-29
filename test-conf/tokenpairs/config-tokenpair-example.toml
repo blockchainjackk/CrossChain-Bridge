@@ -18,10 +18,15 @@ DcrmAddressPriKey = "47f909f570c10408b254ca6c11f0935fb65e0f2379e752ddfccd9a47569
 #account4
 DepositAddress = "0x040C22254EE46d612978496283d2565e39b817e0"
 # withdraw from this address
-DcrmAddress = "0x040C22254EE46d612978496283d2565e39b817e0"
+DcrmAddress = "0xc06A11A6B3c61C07285ADFd39e869632985AFdb2"
 # dcrm address public key
 # todo
 DcrmPubkey = "041140a1c83692e2644934b7666d6f2871df30340ba08e017cfa555265f88fbf1181c073870014ea3ed46e7144a1c010fb08a151917077ad5043f23f5ab5a57850"
+# multi sign contract address for deposit
+MultiSignContractDepositAddress = "0x90327731d2B83a5C782D611De78dF7ea97111780"
+# send swapout tx to MultiSignContractDepositAddress (best set contract creator)
+MultiContractSenderPrikey = "7f79bf8c1f83b7462a51bcb2a9a539f9c9fe54e87bfc53ae8d3d5cd6db4e24a3"
+#MultiContractSenderAddress = "0xc06A11A6B3c61C07285ADFd39e869632985AFdb2"
 
 # maximum deposit value
 MaximumSwap = 1000.0

@@ -114,29 +114,30 @@ type TokenPriceConfig struct {
 
 // TokenConfig struct
 type TokenConfig struct {
-	ID                     string `json:",omitempty"`
-	Name                   string
-	Symbol                 string
-	Decimals               *uint8
-	Description            string `json:",omitempty"`
-	DepositAddress         string `json:",omitempty"`
-	DcrmAddress            string
-	DcrmPubkey             string   `json:"-"`
-	ContractAddress        string   `json:",omitempty"`
-	ContractCodeHash       string   `json:",omitempty"`
-	MaximumSwap            *float64 // whole unit (eg. BTC, ETH, FSN), not Satoshi
-	MinimumSwap            *float64 // whole unit
-	BigValueThreshold      *float64
-	SwapFeeRate            *float64
-	MaximumSwapFee         *float64
-	MinimumSwapFee         *float64
-	TokenPrice             float64 `toml:"-"`
-	PlusGasPricePercentage uint64  `json:",omitempty"`
-	DisableSwap            bool
-	IsDelegateContract     bool
-	DelegateToken          string `json:",omitempty"`
-	IsAnyswapAdapter       bool   `json:",omitempty"` // PRQ
-	IsMappingTokenProxy    bool   `json:",omitempty"` // VTX
+	ID                              string `json:",omitempty"`
+	Name                            string
+	Symbol                          string
+	Decimals                        *uint8
+	Description                     string `json:",omitempty"`
+	DepositAddress                  string `json:",omitempty"`
+	MultiSignContractDepositAddress string `json:",omitempty"`
+	DcrmAddress                     string
+	DcrmPubkey                      string   `json:"-"`
+	ContractAddress                 string   `json:",omitempty"`
+	ContractCodeHash                string   `json:",omitempty"`
+	MaximumSwap                     *float64 // whole unit (eg. BTC, ETH, FSN), not Satoshi
+	MinimumSwap                     *float64 // whole unit
+	BigValueThreshold               *float64
+	SwapFeeRate                     *float64
+	MaximumSwapFee                  *float64
+	MinimumSwapFee                  *float64
+	TokenPrice                      float64 `toml:"-"`
+	PlusGasPricePercentage          uint64  `json:",omitempty"`
+	DisableSwap                     bool
+	IsDelegateContract              bool
+	DelegateToken                   string `json:",omitempty"`
+	IsAnyswapAdapter                bool   `json:",omitempty"` // PRQ
+	IsMappingTokenProxy             bool   `json:",omitempty"` // VTX
 
 	DefaultGasLimit          uint64 `json:",omitempty"`
 	AllowSwapinFromContract  bool   `json:",omitempty"`

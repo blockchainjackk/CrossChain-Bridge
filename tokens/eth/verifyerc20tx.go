@@ -46,7 +46,14 @@ func (b *Bridge) verifyErc20SwapinTxReceipt(swapInfo *tokens.TxSwapInfo, receipt
 	swapInfo.From = strings.ToLower(receipt.From.String()) // From
 	//from ： 跨链token合约中的0x000地址
 	//to   ： 跨链金额接收地址
-	from, to, value, err := ParseErc20SwapinTxLogs(receipt.Logs, token.ContractAddress, token.DepositAddress)
+	var depositAddress string
+	if token.MultiSignContractDepositAddress == "" {
+		depositAddress = token.DepositAddress
+	} else {
+		//如果配置了多签合约地址，就往多签合约地址进行质押
+		depositAddress = token.MultiSignContractDepositAddress
+	}
+	from, to, value, err := ParseErc20SwapinTxLogs(receipt.Logs, token.ContractAddress, depositAddress)
 	if err != nil {
 		if !errors.Is(err, tokens.ErrTxWithWrongReceiver) {
 			log.Debug(b.ChainConfig.BlockChain+" ParseErc20SwapinTxLogs failed", "tx", swapInfo.Hash, "err", err)

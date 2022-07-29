@@ -136,7 +136,7 @@ func (b *Bridge) buildTx(args *tokens.BuildTxArgs) (rawTx interface{}, err error
 		gasFee = new(big.Int).Mul(gasPrice, new(big.Int).SetUint64(gasLimit))
 	}
 	if args.SwapType != tokens.NoSwapType {
-		needValue.Add(needValue, b.getMinReserveFee())
+		// needValue.Add(needValue, b.getMinReserveFee())
 		needValue.Add(needValue, new(big.Int).Mul(big.NewInt(5), gasFee))
 	} else {
 		needValue.Add(needValue, gasFee)

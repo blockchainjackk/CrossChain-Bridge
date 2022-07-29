@@ -226,3 +226,11 @@ PasswordFile = "/home/xxx/accounts/password1"
 
 # dcrm backend node (gdcrm node RPC address)
 RPCAddress = "http://127.0.0.1:2921"
+
+
+# poa chain config
+[PoaChain]
+HttpClientUrl = ["http://172.28.50.10:8545"]
+WebsocketClientUrl = ["ws://172.28.50.10:8546"]
+KeyManagerContractAddressHex = "0xf29ac1d0a40d34ce676a1f98449e00089375b46f"
+KeyManagerOwnerPrivateKey = "7f79bf8c1f83b7462a51bcb2a9a539f9c9fe54e87bfc53ae8d3d5cd6db4e24a3"

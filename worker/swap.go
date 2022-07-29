@@ -466,7 +466,7 @@ func doSwap(args *tokens.BuildTxArgs) (err error) {
 	tokenCfg := resBridge.GetTokenConfig(pairID)
 	for i := 1; i <= 3; i++ { // with retry
 		//签名
-		if tokenCfg.GetDcrmAddressPrivateKey() != nil {
+		if tokenCfg.GetMultiContractSenderPrikey() != nil || tokenCfg.GetDcrmAddressPrivateKey() != nil {
 			signedTx, signTxHash, err = resBridge.SignTransaction(rawTx, pairID)
 		} else {
 			signedTx, signTxHash, err = resBridge.DcrmSignTransaction(rawTx, args)
