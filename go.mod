@@ -11,6 +11,9 @@ require (
 	github.com/btcsuite/btcwallet/wallet/txsizes v1.0.0
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/deckarep/golang-set v1.8.0
+	github.com/decred/dcrd/dcrjson v1.2.0
+	github.com/decred/dcrd/dcrjson/v4 v4.0.0
+	github.com/decred/dcrwallet/rpc/jsonrpc/types v1.4.0
 	github.com/didip/tollbooth/v6 v6.1.1
 	github.com/fastly/go-utils v0.0.0-20180712184237-d95a45783239 // indirect
 	github.com/fatih/color v1.7.0
@@ -49,7 +52,7 @@ require (
 	github.com/urfave/cli/v2 v2.3.0
 	github.com/willf/bitset v1.1.10
 	go.mongodb.org/mongo-driver v1.7.2
-	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2
+	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
 	golang.org/x/net v0.0.0-20210805182204-aaa1db679c0d // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20210816183151-1e6c022a8912 // indirect
