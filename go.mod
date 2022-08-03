@@ -11,8 +11,9 @@ require (
 	github.com/btcsuite/btcwallet/wallet/txsizes v1.0.0
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/deckarep/golang-set v1.8.0
-	github.com/decred/dcrd/dcrjson v1.2.0
-	github.com/decred/dcrd/dcrjson/v4 v4.0.0
+	github.com/decred/dcrd/chaincfg/v3 v3.0.0-20200215031403-6b2ce76f0986
+	github.com/decred/dcrd/dcrjson/v3 v3.0.1
+	github.com/decred/dcrd/dcrutil/v3 v3.0.0-20200215031403-6b2ce76f0986
 	github.com/decred/dcrwallet/rpc/jsonrpc/types v1.4.0
 	github.com/didip/tollbooth/v6 v6.1.1
 	github.com/fastly/go-utils v0.0.0-20180712184237-d95a45783239 // indirect
@@ -35,7 +36,7 @@ require (
 	github.com/jordan-wright/email v0.0.0-20200917010138-e1c00e156980
 	github.com/juju/loggo v0.0.0-20190526231331-6e530bcce5d8 // indirect
 	github.com/juju/testing v0.0.0-20190723135506-ce30eb24acd2
-	github.com/kr/text v0.2.0 // indirect
+	github.com/kr/pretty v0.3.0 // indirect
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.3 // indirect
 	github.com/ltcsuite/ltcd v0.20.1-beta
@@ -61,4 +62,5 @@ require (
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
+
 )

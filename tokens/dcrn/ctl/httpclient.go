@@ -10,11 +10,10 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
+	"github.com/decred/dcrd/dcrjson/v3"
 	"io/ioutil"
 	"net"
 	"net/http"
-
-	"github.com/decred/dcrd/dcrjson/v4"
 )
 
 const urlDefault = "http://127.0.0.1:19557"

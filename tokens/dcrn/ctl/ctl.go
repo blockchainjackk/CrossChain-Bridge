@@ -2,9 +2,8 @@ package ctl
 
 import (
 	"encoding/json"
+	"github.com/decred/dcrd/dcrjson/v3"
 	"time"
-
-	"github.com/decred/dcrd/dcrjson/v4"
 )
 
 const rpcVersion = "1.0"
