@@ -3,6 +3,7 @@ module github.com/anyswap/CrossChain-Bridge
 go 1.14
 
 require (
+	decred.org/dcrwallet v1.2.3-0.20200218145641-af2346539b3c
 	github.com/BurntSushi/toml v0.4.1
 	github.com/btcsuite/btcd v0.21.0-beta
 	github.com/btcsuite/btcutil v1.0.3-0.20201208143702-a53e38424cce
@@ -12,6 +13,7 @@ require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/deckarep/golang-set v1.8.0
 	github.com/decred/dcrd/chaincfg/v3 v3.0.0-20200215031403-6b2ce76f0986
+	github.com/decred/dcrd/dcrec v1.0.0
 	github.com/decred/dcrd/dcrjson/v3 v3.0.1
 	github.com/decred/dcrd/dcrutil/v3 v3.0.0-20200215031403-6b2ce76f0986
 	github.com/decred/dcrwallet/rpc/jsonrpc/types v1.4.0

@@ -5,6 +5,17 @@ import (
 	"github.com/decred/dcrwallet/rpc/jsonrpc/types"
 )
 
+// GetLatestBlockNumberOf impl
+func (b *Bridge) GetLatestBlockNumberOf(apiAddress string) (uint64, error) {
+	return 0, nil
+}
+
+// GetLatestBlockNumber impl
+func (b *Bridge) GetLatestBlockNumber() (uint64, error) {
+
+	return 0, nil
+}
+
 func (b *Bridge) GetTransactionByHash(txHash string) (*types.GetTransactionResult, error) {
 	return ctl.GetTransactionByHash(b, txHash)
 }

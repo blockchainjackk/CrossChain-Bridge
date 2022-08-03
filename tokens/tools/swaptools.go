@@ -178,6 +178,7 @@ func GetP2shBindAddress(p2shAddress string) (bindAddress string) {
 	}
 	var result tokens.P2shAddressInfo
 	for i := 0; i < retryRPCCount; i++ {
+		//todo
 		err := client.RPCPostWithTimeout(swapRPCTimeout, &result, params.ServerAPIAddress, "swap.GetP2shAddressInfo", p2shAddress)
 		if err == nil {
 			return result.BindAddress
