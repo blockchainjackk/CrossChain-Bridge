@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/anyswap/CrossChain-Bridge/common"
 	"github.com/anyswap/CrossChain-Bridge/tokens"
+	"github.com/anyswap/CrossChain-Bridge/tokens/tools"
 )
 
 func (b *Bridge) getP2shAddressWithMemo(memo, pubKeyHash []byte) (p2shAddress string, redeemScript []byte, err error) {
@@ -41,27 +42,27 @@ func (b *Bridge) GetP2shAddress(bindAddr string) (p2shAddress string, redeemScri
 }
 
 //todo  dcrn 中没有 pkScript，这个函数影响的地方是PayToScriptHash
-//func (b *Bridge) getRedeemScriptByOutputScrpit(preScript []byte) ([]byte, error) {
-//	pkScript, err := b.ParsePkScript(preScript)
-//	if err != nil {
-//		return nil, err
-//	}
-//	p2shAddress, err := pkScript.Address(b.Inherit.GetChainParams())
-//	if err != nil {
-//		return nil, err
-//	}
-//	p2shAddr := p2shAddress.String()
-//	bindAddr := tools.GetP2shBindAddress(p2shAddr)
-//	if bindAddr == "" {
-//		return nil, fmt.Errorf("p2sh address %v is not registered", p2shAddr)
-//	}
-//	var address string
-//	address, redeemScript, _ := b.GetP2shAddress(bindAddr)
-//	if address != p2shAddr {
-//		return nil, fmt.Errorf("p2sh address mismatch for bind address %v, have %v want %v", bindAddr, p2shAddr, address)
-//	}
-//	return redeemScript, nil
-//}
+func (b *Bridge) getRedeemScriptByOutputScrpit(preScript []byte) ([]byte, error) {
+	pkScript, err := b.ParsePkScript(preScript)
+	if err != nil {
+		return nil, err
+	}
+	p2shAddress, err := pkScript.Address(b.Inherit.GetChainParams())
+	if err != nil {
+		return nil, err
+	}
+	p2shAddr := p2shAddress.String()
+	bindAddr := tools.GetP2shBindAddress(p2shAddr)
+	if bindAddr == "" {
+		return nil, fmt.Errorf("p2sh address %v is not registered", p2shAddr)
+	}
+	var address string
+	address, redeemScript, _ := b.GetP2shAddress(bindAddr)
+	if address != p2shAddr {
+		return nil, fmt.Errorf("p2sh address mismatch for bind address %v, have %v want %v", bindAddr, p2shAddr, address)
+	}
+	return redeemScript, nil
+}
 
 // GetP2shAddressByRedeemScript get p2sh address by redeem script
 func (b *Bridge) GetP2shAddressByRedeemScript(redeemScript []byte) (string, error) {
