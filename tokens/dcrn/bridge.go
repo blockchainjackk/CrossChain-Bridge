@@ -2,10 +2,11 @@ package dcrn
 
 import (
 	"fmt"
-	"github.com/anyswap/CrossChain-Bridge/log"
-	"github.com/anyswap/CrossChain-Bridge/tokens"
 	"strings"
 	"time"
+
+	"github.com/anyswap/CrossChain-Bridge/log"
+	"github.com/anyswap/CrossChain-Bridge/tokens"
 )
 
 const (

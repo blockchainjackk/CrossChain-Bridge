@@ -10,10 +10,11 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
-	"github.com/decred/dcrd/dcrjson/v3"
 	"io/ioutil"
 	"net"
 	"net/http"
+
+	"github.com/decred/dcrd/dcrjson/v3"
 )
 
 const urlDefault = "http://127.0.0.1:19557"
@@ -44,7 +45,7 @@ func newHTTPClient() (*http.Client, error) {
 }
 
 func rpcCallByUrl(url string, marshalledJSON []byte) ([]byte, error) {
-
+	initArgs()
 	bodyReader := bytes.NewReader(marshalledJSON)
 	httpRequest, err := http.NewRequest("POST", url, bodyReader)
 	if err != nil {
@@ -54,7 +55,7 @@ func rpcCallByUrl(url string, marshalledJSON []byte) ([]byte, error) {
 	httpRequest.Header.Set("Content-Type", "application/json")
 
 	// Configure basic access authorization.
-	// httpRequest.SetBasicAuth(rpcuser, rpcpassword)
+	httpRequest.SetBasicAuth(rpcuser, rpcpassword)
 
 	// Create the new HTTP client that is configured according to the user-
 	// specified options and submit the request.
@@ -103,6 +104,5 @@ func rpcCallByUrl(url string, marshalledJSON []byte) ([]byte, error) {
 }
 
 func rpcCall(marshalledJSON []byte) ([]byte, error) {
-	initArgs()
 	return rpcCallByUrl(urlDefault, marshalledJSON)
 }

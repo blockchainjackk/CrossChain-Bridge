@@ -14,8 +14,10 @@ require (
 	github.com/deckarep/golang-set v1.8.0
 	github.com/decred/dcrd/chaincfg/v3 v3.0.0-20200215031403-6b2ce76f0986
 	github.com/decred/dcrd/dcrec v1.0.0
-	github.com/decred/dcrd/dcrjson/v3 v3.0.1
+	github.com/decred/dcrd/dcrjson/v3 v3.1.0
 	github.com/decred/dcrd/dcrutil/v3 v3.0.0-20200215031403-6b2ce76f0986
+	github.com/decred/dcrd/rpc/jsonrpc/types/v2 v2.3.0
+	github.com/decred/dcrd/txscript/v3 v3.0.0-20200215031403-6b2ce76f0986
 	github.com/decred/dcrwallet/rpc/jsonrpc/types v1.4.0
 	github.com/didip/tollbooth/v6 v6.1.1
 	github.com/fastly/go-utils v0.0.0-20180712184237-d95a45783239 // indirect
