@@ -95,8 +95,9 @@ github.com/decred/dcrd/dcrec/secp256k1/v3 v3.0.0-20200215015031-3283587e6add/go.
 github.com/decred/dcrd/dcrec/secp256k1/v3 v3.0.0-20200215023918-6247af01d5e3/go.mod h1:Ej0/gOv8NpFfaczyXGndw7eRMJFVhmY2faSeyxztSUw=
 github.com/decred/dcrd/dcrec/secp256k1/v3 v3.0.0-20200215031403-6b2ce76f0986 h1:r8PwukjSzsZeVOgq1M3Q6ml6A7zZGvMTFjmxFcl2XX8=
 github.com/decred/dcrd/dcrec/secp256k1/v3 v3.0.0-20200215031403-6b2ce76f0986/go.mod h1:Ej0/gOv8NpFfaczyXGndw7eRMJFVhmY2faSeyxztSUw=
-github.com/decred/dcrd/dcrjson/v3 v3.0.1 h1:b9cpplNJG+nutE2jS8K/BtSGIJihEQHhFjFAsvJF/iI=
 github.com/decred/dcrd/dcrjson/v3 v3.0.1/go.mod h1:fnTHev/ABGp8IxFudDhjGi9ghLiXRff1qZz/wvq12Mg=
+github.com/decred/dcrd/dcrjson/v3 v3.1.0 h1:Y2VjCXCNWbNIa52wMKEuNiU+9rUgnjYb5c1JQW6PuzM=
+github.com/decred/dcrd/dcrjson/v3 v3.1.0/go.mod h1:fnTHev/ABGp8IxFudDhjGi9ghLiXRff1qZz/wvq12Mg=
 github.com/decred/dcrd/dcrutil/v2 v2.0.0/go.mod h1:gUshVAXpd51DlcEhr51QfWL2HJGkMDM1U8chY+9VvQg=
 github.com/decred/dcrd/dcrutil/v2 v2.0.1/go.mod h1:JdEgF6eh0TTohPeiqDxqDSikTSvAczq0J7tFMyyeD+k=
 github.com/decred/dcrd/dcrutil/v3 v3.0.0-20200104000002-54b67d3474fb/go.mod h1:4/YL+e1ncKg50erd0PLp7vjZq1PcMftm6IU4rxzP6RA=
@@ -110,6 +111,8 @@ github.com/decred/dcrd/hdkeychain/v3 v3.0.0-20200214234150-4f3c5d33ad03/go.mod h
 github.com/decred/dcrd/lru v1.0.0/go.mod h1:mxKOwFd7lFjN2GZYsiz/ecgqR6kkYAl+0pz0tEMk218=
 github.com/decred/dcrd/rpc/jsonrpc/types v1.0.1 h1:sWsGtWzdmrna6aysDCHwjANTJh+Lxt2xp6S10ahP79Y=
 github.com/decred/dcrd/rpc/jsonrpc/types v1.0.1/go.mod h1:dJUp9PoyFYklzmlImpVkVLOr6j4zKuUv66YgemP2sd8=
+github.com/decred/dcrd/rpc/jsonrpc/types/v2 v2.3.0 h1:KZ2zihwY5Mx6EeYwEA3bL3k+qDXdCraQL+iDIG1BP5k=
+github.com/decred/dcrd/rpc/jsonrpc/types/v2 v2.3.0/go.mod h1:krn89ZOgSa8yc7sA4WpDK95p61NnjNWFkNlMnGrKbMc=
 github.com/decred/dcrd/txscript/v2 v2.0.0/go.mod h1:WStcyYYJa+PHJB4XjrLDRzV96/Z4thtsu8mZoVrU6C0=
 github.com/decred/dcrd/txscript/v2 v2.1.0/go.mod h1:XaJAVrZU4NWRx4UEzTiDAs86op1m8GRJLz24SDBKOi0=
 github.com/decred/dcrd/txscript/v3 v3.0.0-20200215023918-6247af01d5e3/go.mod h1:ATMA8K0SOo+M9Wdbr6dMnAd8qICJi6pXjGLlKsJc99E=

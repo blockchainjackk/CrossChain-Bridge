@@ -30,7 +30,7 @@ func CallGet(result interface{}, url, method string, params ...interface{}) erro
 	return nil
 }
 
-func CallPost(result interface{}, url, method string, params ...interface{}) (string, error) {
+func CallPost(url, method string, params ...interface{}) (string, error) {
 	id := time.Now().Unix()
 
 	req, err := dcrjson.NewRequest(rpcVersion, id, method, params)
