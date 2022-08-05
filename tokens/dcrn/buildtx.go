@@ -316,7 +316,7 @@ func (b *Bridge) selectUtxos(from string, target dcrnAmountType) (detail *txauth
 			continue
 		}
 
-		txIn, errf := b.NewTxIn(*utxo.Txid, *utxo.Vout, p2pkhScript)
+		txIn, errf := b.NewTxIn(*utxo.Txid, *utxo.Vout, int64(value), p2pkhScript)
 		if errf != nil {
 			continue
 		}
@@ -388,7 +388,7 @@ func (b *Bridge) getUtxos(from string, target dcrnAmountType, prevOutPoints []*t
 			return nil, err
 		}
 
-		txIn, errf := b.NewTxIn(point.Hash, point.Index, p2pkhScript)
+		txIn, errf := b.NewTxIn(point.Hash, point.Index, int64(value), p2pkhScript)
 		if errf != nil {
 			return nil, errf
 		}

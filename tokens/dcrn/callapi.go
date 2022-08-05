@@ -107,6 +107,6 @@ func (b *Bridge) GetTokenSupply(tokenType, tokenAddress string) (*big.Int, error
 }
 
 //
-func (b *Bridge) SignRawtransaction(unsignedHex string) (signedHex string, err error) {
+func (b *Bridge) SignRawtransaction(unsignedHex string) (signedHex string, hash string, err error) {
 	return ctl.SignRawtransaction(b, unsignedHex)
 }

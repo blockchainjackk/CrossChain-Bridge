@@ -237,14 +237,14 @@ func CreateRawTransaction() {
 }
 
 //签名交易
-func SignRawtransaction(b tokens.CrossChainBridge, hex string) (signedHex string, err error) {
+func SignRawtransaction(b tokens.CrossChainBridge, hex string) (signedHex string, txHash string, err error) {
 	gateway := b.GetGatewayConfig()
 	var resultSignRawTransaction types.SignRawTransactionResult
 	for _, apiAddress := range gateway.APIAddress {
 		err := CallGet(&resultSignRawTransaction, apiAddress, "signrawtransaction", hex)
 		if err == nil {
-			return resultSignRawTransaction.Hex, nil
+			return resultSignRawTransaction.Hex, "", nil
 		}
 	}
-	return signedHex, err
+	return signedHex, "", err
 }
