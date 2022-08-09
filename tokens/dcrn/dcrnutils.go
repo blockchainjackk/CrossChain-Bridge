@@ -66,7 +66,7 @@ func (b *Bridge) GetPayToAddrScript(address string) (pkScript []byte, version ui
 // NullDataScript encap
 func (b *Bridge) NullDataScript(memo string) ([]byte, error) {
 	//todo dcrn 中没有这个函数了
-	txscript.NullDataScript([]byte(memo))
+	//txscript.NullDataScript([]byte(memo))
 
 	return nil, nil
 

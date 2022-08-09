@@ -94,7 +94,7 @@ func testSignRawtransaction() {
 		fmt.Println("err:", err)
 	}
 	//second
-	signedHex2, err := ctl.SignRawtransaction(bridge, hex)
+	signedHex2, _, err := ctl.SignRawtransaction(bridge, hex)
 	if err == nil {
 		fmt.Printf("signedHex2:%v;type:%T\n", signedHex2, signedHex2)
 	} else {

@@ -106,7 +106,12 @@ func (b *Bridge) GetTokenSupply(tokenType, tokenAddress string) (*big.Int, error
 	return nil, fmt.Errorf("[%v] can not get token supply of token with type '%v'", b.ChainConfig.BlockChain, tokenType)
 }
 
-//
+// SignRawtransaction iml
 func (b *Bridge) SignRawtransaction(unsignedHex string) (signedHex string, hash string, err error) {
 	return ctl.SignRawtransaction(b, unsignedHex)
+}
+
+// GetOutspend impl
+func (b *Bridge) GetOutspend(txHash string, vout uint32) (*electrs.ElectOutspend, error) {
+	return electrs.GetOutspend(b, txHash, vout)
 }

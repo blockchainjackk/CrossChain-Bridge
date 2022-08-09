@@ -54,7 +54,7 @@ func checkEqualLength(authoredTx *txauthor.AuthoredTx, msgHash, rsv []string, si
 
 // VerifyRedeemScript verify redeem script
 func (b *Bridge) VerifyRedeemScript(prevScript, redeemScript []byte) error {
-	p2shScript, err := b.GetP2shSigScript(redeemScript)
+	p2shScript, _, err := b.GetP2shSigScript(redeemScript)
 	if err != nil {
 		return err
 	}
@@ -98,4 +98,11 @@ func (b *Bridge) SignTransaction(rawTx interface{}, pairID string) (signedTx int
 	}
 
 	return b.SignRawtransaction(builder.String())
+}
+
+//todo 这个可能用不到了
+// GetCompressedPublicKey get compressed public key
+func (b *Bridge) GetCompressedPublicKey(fromPublicKey string, needVerify bool) (cPkData []byte, err error) {
+
+	return nil, nil
 }
