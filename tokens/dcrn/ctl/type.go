@@ -1,9 +1,7 @@
 package ctl
 
-import "github.com/decred/dcrwallet/rpc/jsonrpc/types"
-
 // SortableUnspentSlice sortable
-type SortableUnspentSlice []*types.ListUnspentResult
+type SortableUnspentSlice []*ListUnspentResult
 
 // Len impl Sortable
 func (s SortableUnspentSlice) Len() int {
@@ -35,4 +33,40 @@ type DcrnTxStatus struct {
 	BlockHeight uint64 `json:"block_height"`
 	BlockHash   string `json:"block_hash"`
 	BlockTime   uint64 `json:"block_time"`
+}
+
+//以下三个struct（ListUnspentResult、SignRawTransactionError、SignRawTransactionResult）来自于github.com/decred/dcrwallet/rpc/jsonrpc/types
+//由于与github.com/decred/dcrd/rpc/jsonrpc/types/v2包可能存在冲突问题，所以直接复制过来进行使用
+// ListUnspentResult models a successful response from the listunspent request.
+// Contains Decred additions.
+type ListUnspentResult struct {
+	TxID          string  `json:"txid"`
+	Vout          uint32  `json:"vout"`
+	Tree          int8    `json:"tree"`
+	TxType        int     `json:"txtype"`
+	Address       string  `json:"address"`
+	Account       string  `json:"account"`
+	ScriptPubKey  string  `json:"scriptPubKey"`
+	RedeemScript  string  `json:"redeemScript,omitempty"`
+	Amount        float64 `json:"amount"`
+	Confirmations int64   `json:"confirmations"`
+	Spendable     bool    `json:"spendable"`
+}
+
+// SignRawTransactionError models the data that contains script verification
+// errors from the signrawtransaction request.
+type SignRawTransactionError struct {
+	TxID      string `json:"txid"`
+	Vout      uint32 `json:"vout"`
+	ScriptSig string `json:"scriptSig"`
+	Sequence  uint32 `json:"sequence"`
+	Error     string `json:"error"`
+}
+
+// SignRawTransactionResult models the data from the signrawtransaction
+// command.
+type SignRawTransactionResult struct {
+	Hex      string                    `json:"hex"`
+	Complete bool                      `json:"complete"`
+	Errors   []SignRawTransactionError `json:"errors,omitempty"`
 }

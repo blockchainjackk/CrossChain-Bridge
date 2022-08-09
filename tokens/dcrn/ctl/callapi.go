@@ -6,8 +6,7 @@ import (
 
 	"github.com/anyswap/CrossChain-Bridge/tokens"
 	"github.com/anyswap/CrossChain-Bridge/tokens/btc/electrs"
-	dtypes "github.com/decred/dcrd/rpc/jsonrpc/types/v2"
-	"github.com/decred/dcrwallet/rpc/jsonrpc/types"
+	"github.com/decred/dcrd/rpc/jsonrpc/types/v2"
 )
 
 // GetLatestBlockNumberOf
@@ -37,7 +36,7 @@ func GetLatestBlockNumber(b tokens.CrossChainBridge) (result uint64, err error) 
 //获取交易信息
 func GetTransactionByHash(b tokens.CrossChainBridge, txHash string) (*electrs.ElectTx, error) {
 	gateway := b.GetGatewayConfig()
-	var txRawResult dtypes.TxRawResult
+	var txRawResult types.TxRawResult
 	var err error
 	for _, apiAddress := range gateway.APIAddress {
 		//注意：要用getrawtransaction（节点启动时需要增加--txindex参数），不要用gettransaction
@@ -67,7 +66,8 @@ func FindUtxos(b tokens.CrossChainBridge, addrs []string) ([]*electrs.ElectUtxo,
 	gateway := b.GetGatewayConfig()
 	minconf := 1
 	maxconf := 999
-	var unspentResult []*types.ListUnspentResult
+	var unspentResult []*ListUnspentResult
+
 	var err error
 	for _, apiAddress := range gateway.APIAddress {
 		err = CallGet(&unspentResult, apiAddress, "listunspent", minconf, maxconf, addrs)
@@ -108,7 +108,7 @@ func GetTransactionHistory(b tokens.CrossChainBridge, addr, lastSeenTxid string)
 // GetOutspend
 func GetOutspend(b tokens.CrossChainBridge, txHash string, vout uint32) (result *electrs.ElectOutspend, err error) {
 	gateway := b.GetGatewayConfig()
-	var txOutResult dtypes.GetTxOutResult
+	var txOutResult types.GetTxOutResult
 	for _, apiAddress := range gateway.APIAddress {
 		err = CallGet(&txOutResult, apiAddress, "gettxout", txHash, vout, true)
 		if err == nil {
@@ -168,7 +168,7 @@ func GetBlockTxids(b tokens.CrossChainBridge, blockHash string) (result []string
 // 根据区块hash查询区块信息
 func GetBlock(b tokens.CrossChainBridge, blockHash string) (*electrs.ElectBlock, error) {
 	gateway := b.GetGatewayConfig()
-	var blockVerboseResult dtypes.GetBlockVerboseResult
+	var blockVerboseResult types.GetBlockVerboseResult
 	var err error
 	for _, apiAddress := range gateway.APIAddress {
 		err = CallGet(&blockVerboseResult, apiAddress, "getblock", blockHash)
@@ -181,9 +181,9 @@ func GetBlock(b tokens.CrossChainBridge, blockHash string) (*electrs.ElectBlock,
 }
 
 // GetDcrnBlock
-func GetDcrnBlock(b tokens.CrossChainBridge, blockHash string) (*dtypes.GetBlockVerboseResult, error) {
+func GetDcrnBlock(b tokens.CrossChainBridge, blockHash string) (*types.GetBlockVerboseResult, error) {
 	gateway := b.GetGatewayConfig()
-	var result dtypes.GetBlockVerboseResult
+	var result types.GetBlockVerboseResult
 	var err error
 	for _, apiAddress := range gateway.APIAddress {
 		err = CallGet(&result, apiAddress, "getblock", blockHash)
@@ -238,7 +238,7 @@ func CreateRawTransaction() {
 //签名交易
 func SignRawtransaction(b tokens.CrossChainBridge, hex string) (signedHex string, txHash string, err error) {
 	gateway := b.GetGatewayConfig()
-	var resultSignRawTransaction types.SignRawTransactionResult
+	var resultSignRawTransaction SignRawTransactionResult
 	for _, apiAddress := range gateway.APIAddress {
 		err = CallGet(&resultSignRawTransaction, apiAddress, "signrawtransaction", hex)
 		if err == nil {
@@ -248,7 +248,7 @@ func SignRawtransaction(b tokens.CrossChainBridge, hex string) (signedHex string
 	return signedHex, "", err
 }
 
-func Decoderawtransaction(b tokens.CrossChainBridge, hexTx string) (result *dtypes.TxRawDecodeResult, err error) {
+func Decoderawtransaction(b tokens.CrossChainBridge, hexTx string) (result *types.TxRawDecodeResult, err error) {
 	gateway := b.GetGatewayConfig()
 	for _, apiAddress := range gateway.APIAddress {
 		err := CallGet(&result, apiAddress, "decoderawtransaction", hexTx)

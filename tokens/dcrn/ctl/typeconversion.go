@@ -5,8 +5,7 @@ import (
 	"strconv"
 
 	"github.com/anyswap/CrossChain-Bridge/tokens/btc/electrs"
-	dtypes "github.com/decred/dcrd/rpc/jsonrpc/types/v2"
-	"github.com/decred/dcrwallet/rpc/jsonrpc/types"
+	"github.com/decred/dcrd/rpc/jsonrpc/types/v2"
 )
 
 const (
@@ -26,7 +25,7 @@ func DcrnTxStatus2ElectTxStatus(status *DcrnTxStatus) electrs.ElectTxStatus {
 }
 
 // TxStatus make elect tx status from dcrn tx raw result
-func TxStatus(tx *dtypes.TxRawResult) *electrs.ElectTxStatus {
+func TxStatus(tx *types.TxRawResult) *electrs.ElectTxStatus {
 	status := &electrs.ElectTxStatus{
 		Confirmed:   new(bool),
 		BlockHeight: new(uint64),
@@ -41,7 +40,7 @@ func TxStatus(tx *dtypes.TxRawResult) *electrs.ElectTxStatus {
 }
 
 // UnspentStatus make elect tx status from dcrn list unspent result
-func UnspentStatus(unspent *types.ListUnspentResult) *electrs.ElectTxStatus {
+func UnspentStatus(unspent *ListUnspentResult) *electrs.ElectTxStatus {
 	status := &electrs.ElectTxStatus{
 		Confirmed: new(bool),
 		//查看ElectUtxo中的ElectTxStatus只用到了Confirmed属性
@@ -51,7 +50,7 @@ func UnspentStatus(unspent *types.ListUnspentResult) *electrs.ElectTxStatus {
 }
 
 // TxRawResult2ElectTx converts dcrn TxRawResult to elect Tx
-func TxRawResult2ElectTx(tx *dtypes.TxRawResult) *electrs.ElectTx {
+func TxRawResult2ElectTx(tx *types.TxRawResult) *electrs.ElectTx {
 	etx := &electrs.ElectTx{
 		Txid:     &tx.Txid,
 		Version:  new(uint32),
@@ -79,7 +78,7 @@ func TxRawResult2ElectTx(tx *dtypes.TxRawResult) *electrs.ElectTx {
 }
 
 // GetBlockVerboseResult2ElectBlock converts dcrn GetBlockVerboseResult to elect Block
-func GetBlockVerboseResult2ElectBlock(block *dtypes.GetBlockVerboseResult) *electrs.ElectBlock {
+func GetBlockVerboseResult2ElectBlock(block *types.GetBlockVerboseResult) *electrs.ElectBlock {
 	eblk := &electrs.ElectBlock{
 		Hash:         new(string),
 		Height:       new(uint32),
@@ -112,7 +111,7 @@ func GetBlockVerboseResult2ElectBlock(block *dtypes.GetBlockVerboseResult) *elec
 }
 
 // ConvertVin converts dcrn vin to elect vin
-func ConvertVin(vin *dtypes.Vin) *electrs.ElectTxin {
+func ConvertVin(vin *types.Vin) *electrs.ElectTxin {
 	evin := &electrs.ElectTxin{
 		Txid:         &vin.Txid,
 		Vout:         &vin.Vout,
@@ -130,7 +129,7 @@ func ConvertVin(vin *dtypes.Vin) *electrs.ElectTxin {
 }
 
 // ConvertVout converts dcrn vout to elect vout
-func ConvertVout(vout *dtypes.Vout) *electrs.ElectTxOut {
+func ConvertVout(vout *types.Vout) *electrs.ElectTxOut {
 	evout := &electrs.ElectTxOut{
 		Scriptpubkey:        &vout.ScriptPubKey.Hex,
 		ScriptpubkeyAsm:     &vout.ScriptPubKey.Asm,
@@ -157,7 +156,7 @@ func ConvertVout(vout *dtypes.Vout) *electrs.ElectTxOut {
 }
 
 // SliceUnspentResult2ElectUtxo converts dcrn ListUnspentResult(slice) to elect Utxo(slice)
-func SliceUnspentResult2ElectUtxo(unspentArray []*types.ListUnspentResult) []*electrs.ElectUtxo {
+func SliceUnspentResult2ElectUtxo(unspentArray []*ListUnspentResult) []*electrs.ElectUtxo {
 	var utxoArray []*electrs.ElectUtxo
 	for _, unspent := range unspentArray {
 		utxo := UnspentResult2ElectUtxo(unspent)
@@ -167,7 +166,7 @@ func SliceUnspentResult2ElectUtxo(unspentArray []*types.ListUnspentResult) []*el
 }
 
 // UnspentResult2ElectUtxo converts dcrn ListUnspentResult to elect Utxo
-func UnspentResult2ElectUtxo(unspent *types.ListUnspentResult) *electrs.ElectUtxo {
+func UnspentResult2ElectUtxo(unspent *ListUnspentResult) *electrs.ElectUtxo {
 	utxo := &electrs.ElectUtxo{
 		Txid:   &unspent.TxID,
 		Vout:   &unspent.Vout,
@@ -179,7 +178,7 @@ func UnspentResult2ElectUtxo(unspent *types.ListUnspentResult) *electrs.ElectUtx
 }
 
 // TxOutspend make elect outspend from dcrn GetTxOutResult raw result
-func TxOutResult2ElectOutspend(txout *dtypes.GetTxOutResult) *electrs.ElectOutspend {
+func TxOutResult2ElectOutspend(txout *types.GetTxOutResult) *electrs.ElectOutspend {
 	outspend := &electrs.ElectOutspend{
 		Spent: new(bool),
 	}
