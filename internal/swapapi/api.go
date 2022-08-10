@@ -2,6 +2,7 @@ package swapapi
 
 import (
 	"encoding/hex"
+	"github.com/anyswap/CrossChain-Bridge/tokens/dcrn"
 	"strings"
 	"sync"
 	"time"
@@ -20,6 +21,8 @@ var (
 	errNotBtcBridge      = newRPCError(-32096, "bridge is not btc")
 	errTokenPairNotExist = newRPCError(-32095, "token pair not exist")
 	errSwapCannotRetry   = newRPCError(-32094, "swap can not retry")
+
+	errNotDcrnBridge = newRPCError(-32097, "bridge is not dcrn")
 
 	oraclesHeartbeats sync.Map // string -> int64 // key is enode
 )
@@ -225,6 +228,34 @@ func GetSwapoutHistory(address, pairID string, offset, limit int, status string)
 func Swapin(txid, pairID *string) (*PostResult, error) {
 	log.Debug("[api] receive Swapin", "txid", *txid, "pairID", *pairID)
 	return swap(txid, pairID, true)
+}
+
+// SwapinDcrn api
+func SwapinDcrn(txid, bind *string) (*PostResult, error) {
+	log.Debug("[api] receive Swapin", "txid", *txid, "bind", *bind)
+	if dcrn.BridgeInstance == nil {
+		return nil, errNotDcrnBridge
+	}
+	bridge := dcrn.BridgeInstance
+	txidstr := *txid
+	pairId := dcrn.PairID
+	bindAddr := *bind
+
+	if err := basicCheckSwapRegister(bridge, pairId); err != nil {
+		return nil, err
+	}
+	swapInfo, err := bridge.VerifyFormTransaction(pairId, txidstr, bindAddr, true)
+	var txType tokens.SwapTxType
+	txType = tokens.SwapinTx
+
+	err = addSwapToDatabase(txidstr, txType, swapInfo, err)
+	if err != nil {
+		return nil, err
+	}
+
+	log.Info("[api] receive swapin register", "txid", txidstr, "pairID", pairId)
+
+	return &SuccessPostResult, nil
 }
 
 // RetrySwapin api

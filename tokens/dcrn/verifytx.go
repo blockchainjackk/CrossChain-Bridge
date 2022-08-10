@@ -79,14 +79,22 @@ func (b *Bridge) VerifyMsgHash(rawTx interface{}, msgHash []string) (err error) 
 }
 
 // VerifyTransaction impl
+func (b *Bridge) VerifyFormTransaction(pairID, txHash, bindAddress string, allowUnstable bool) (*tokens.TxSwapInfo, error) {
+	if !b.IsSrc {
+		return nil, tokens.ErrBridgeDestinationNotSupported
+	}
+	return b.verifySwapinTx(pairID, txHash, bindAddress, allowUnstable)
+}
+
+// VerifyTransaction impl
 func (b *Bridge) VerifyTransaction(pairID, txHash string, allowUnstable bool) (*tokens.TxSwapInfo, error) {
 	if !b.IsSrc {
 		return nil, tokens.ErrBridgeDestinationNotSupported
 	}
-	return b.verifySwapinTx(pairID, txHash, allowUnstable)
+	return b.verifySwapinTx(pairID, txHash, "", allowUnstable)
 }
 
-func (b *Bridge) verifySwapinTx(pairID, txHash string, allowUnstable bool) (*tokens.TxSwapInfo, error) {
+func (b *Bridge) verifySwapinTx(pairID, txHash, bindAddr string, allowUnstable bool) (*tokens.TxSwapInfo, error) {
 	tokenCfg := b.GetTokenConfig(pairID)
 	if tokenCfg == nil {
 		return nil, tokens.ErrUnknownPairID
@@ -120,7 +128,17 @@ func (b *Bridge) verifySwapinTx(pairID, txHash string, allowUnstable bool) (*tok
 	if !rightReceiver {
 		return swapInfo, tokens.ErrTxWithWrongReceiver
 	}
-	bindAddress, bindOk := GetBindAddressFromMemoScipt(memoScript)
+	var bindAddress string
+	var bindOk bool
+	if bindAddr == "" {
+		bindAddress, bindOk = GetBindAddressFromMemoScipt(memoScript)
+		if !bindOk {
+			log.Debug("wrong memo", "memo", memoScript)
+			return swapInfo, tokens.ErrTxWithWrongMemo
+		}
+	} else {
+		bindAddress = bindAddr
+	}
 
 	swapInfo.To = depositAddress                      // To
 	swapInfo.Value = common.BigFromUint64(value)      // Value
@@ -130,10 +148,6 @@ func (b *Bridge) verifySwapinTx(pairID, txHash string, allowUnstable bool) (*tok
 	err = b.checkSwapinInfo(swapInfo)
 	if err != nil {
 		return swapInfo, err
-	}
-	if !bindOk {
-		log.Debug("wrong memo", "memo", memoScript)
-		return swapInfo, tokens.ErrTxWithWrongMemo
 	}
 
 	if !allowUnstable {

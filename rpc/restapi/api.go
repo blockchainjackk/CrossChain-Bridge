@@ -236,6 +236,15 @@ func PostSwapinHandler(w http.ResponseWriter, r *http.Request) {
 	writeResponse(w, res, err)
 }
 
+// PostSwapinHandler handler
+func PostSwapinDcrnHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	txid := vars["txid"]
+	bind := vars["bind"]
+	res, err := swapapi.SwapinDcrn(&txid, &bind)
+	writeResponse(w, res, err)
+}
+
 // RetrySwapinHandler handler
 func RetrySwapinHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)

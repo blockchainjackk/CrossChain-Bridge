@@ -12,9 +12,9 @@ Description = "DCRN Coin"
 # if ID is ERC20, this is the erc20 token's contract address
 ContractAddress = ""
 # deposit to this address to make swap
-DepositAddress = "SspNRQnRCL88JYoNhEgnchbLpiaYCj682id"
+DepositAddress = "SsWzo3muBogW2aipZsJyKkPqdPyxmBWLzjn"
 # account4 as dcrm
-DcrmAddressPriKey = "PsUQHCuprbSYDtpoRwEZtZkhgNYmTWkdmTZKLDSdnqx9DXozRAqiA"
+DcrmAddressPriKey = "PsUR4C4jopKuKy64WYiFE31KQPLPp5chkCDUJDeWuxFpLtLjZgAfG"
 
 # withdraw from this address
 DcrmAddress = "SspNRQnRCL88JYoNhEgnchbLpiaYCj682id"

@@ -43,7 +43,7 @@ func (b *Bridge) processSwapin(txid string) {
 	if tools.IsSwapExist(txid, PairID, "", true) {
 		return
 	}
-	swapInfo, err := b.verifySwapinTx(PairID, txid, true)
+	swapInfo, err := b.verifySwapinTx(PairID, txid, "", true)
 	tools.RegisterSwapin(txid, []*tokens.TxSwapInfo{swapInfo}, []error{err})
 }
 
