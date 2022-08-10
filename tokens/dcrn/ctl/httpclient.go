@@ -89,8 +89,6 @@ func rpcCallByUrl(url string, marshalledJSON []byte) ([]byte, error) {
 		return nil, fmt.Errorf("%s", respBytes)
 	}
 
-	fmt.Println(string(respBytes))
-
 	// Unmarshal the response.
 	var resp dcrjson.Response
 	if err := json.Unmarshal(respBytes, &resp); err != nil {

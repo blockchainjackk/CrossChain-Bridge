@@ -1,24 +1,25 @@
-PairID = "BTC"
+PairID = "DCRN"
 DiffDecimals = false
 
 # source token config
 [SrcToken]
 # ID must be ERC20 if source token is erc20 token
-ID = "BTC"
-Name = "Bitcoin Coin"
+ID = "DCRN"
+Name = "DCRN"
 Symbol = "DCRN"
 Decimals = 8
-Description = "Bitcoin Coin"
+Description = "DCRN Coin"
 # if ID is ERC20, this is the erc20 token's contract address
 ContractAddress = ""
 # deposit to this address to make swap
-DepositAddress = "SsdRSGz26xfyKT6mRgzs4XrF5FZJdfqArXm"
+DepositAddress = "SspNRQnRCL88JYoNhEgnchbLpiaYCj682id"
 # account4 as dcrm
+DcrmAddressPriKey = "PsUQHCuprbSYDtpoRwEZtZkhgNYmTWkdmTZKLDSdnqx9DXozRAqiA"
 
 # withdraw from this address
-DcrmAddress = "SsdRSGz26xfyKT6mRgzs4XrF5FZJdfqArXm"
+DcrmAddress = "SspNRQnRCL88JYoNhEgnchbLpiaYCj682id"
 # dcrm address public key
-DcrmPubkey = "045c8648793e4867af465691685000ae841dccab0b011283139d2eae454b569d5789f01632e13a75a5aad8480140e895dd671cae3639f935750bea7ae4b5a2512e"
+DcrmPubkey = ""
 # maximum deposit value
 MaximumSwap = 1000.0
 # minimum deposit value
@@ -33,7 +34,7 @@ MinimumSwapFee = 0.00001
 # corresponding to send asset on source chain (eg. BTC) for withdrawing
 PlusGasPricePercentage = 15 # plus 15% gas price
 # if deposit value is larger than this value then need more verify strategy
-BigValueThreshold = 5.0
+BigValueThreshold = 50000.0
 # disable deposit function if this flag is true
 DisableSwap = false
 # default gas limit
@@ -48,17 +49,21 @@ BigValueWhitelist = [
 
 # dest token config
 [DestToken]
-ID = "mBTC"
-Name = "SMPC Bitcoin"
-Symbol = "mBTC"
+ID = "mDCRN"
+Name = "mDCRN"
+Symbol = "mDCRN"
 Decimals = 8
 Description = "cross chain bridge BTC with mBTC"
 # mapping erc20 token address
-ContractAddress = "0x61b8c4d6d28d5f7edadbea5456db3b4f7f836b64"
+ContractAddress = "0xd2656eA85A91556E08AcF3Fb1f19b940967cBa20"
 # mapping erc20 token creator
-DcrmAddress = "0xbF0A46d3700E23a98F38079cE217742c92Bb66bC"
+DcrmAddress = "0x30542709eaEA5Db50bFD00B00FCcA150192c5a60"
+
+# mutichain2 priky  as DCRM
+DcrmAddressPriKey = "1ffa05c8f791460d868c8fbc71496f1a7c2a10cc0a3063554b12849c22a2955e"
+
 # dcrm address public key
-DcrmPubkey = "045c8648793e4867af465691685000ae841dccab0b011283139d2eae454b569d5789f01632e13a75a5aad8480140e895dd671cae3639f935750bea7ae4b5a2512e"
+DcrmPubkey = "04c1d78f946714f3573bf9f3596a9f8e2bc6f423ea1f37fede76e2da914134e3e699aa820a2e3fc64a1e0c5b11914c9338b7ae046fdbf76841521972bdf16e79bb"
 # maximum withdraw value
 MaximumSwap = 100.0
 # minimum withdraw value

@@ -1,5 +1,5 @@
 # a short string to identify the bridge
-Identifier = "BTC2ETH"
+Identifier = "DCRN2ETH"
 
 # administrators who can do admin work like maintain blacklist etc.
 [Server]
@@ -18,11 +18,11 @@ SendTxLoopInterval = 10
 # modgodb database connection config (server only)
 [Server.MongoDB]
 # DBURLs is prefered if exists. forbids set both DBURL and DBURLs.
-#DBURL = "localhost:27017,localhost:12345"
+DBURL = "localhost:27017"
 #DBURLs = ["localhost:27017", "localhost:12345"]
-DBName = "databasename"
-UserName = "username"
-Password = "password"
+DBName = "multibtcbsc"
+UserName = "multichainbtc"
+Password = "123456"
 
 # bridge API service (server only)
 [Server.APIServer]
@@ -63,7 +63,7 @@ EstimateFeeBlocks = 6
 UtxoAggregateMinCount = 20
 # aggregate if have more than so many value
 UtxoAggregateMinValue = 1000000 # unit satoshi
-# aggreate to this address
+# aggreate to this address #todo
 UtxoAggregateToAddress = "mfwPnCuht2b4Lvb5XTds4Rvzy3jZ2ZWrBL"
 
 # extra config
@@ -79,7 +79,7 @@ CheckBindAddrIsContract = false
 
 # source chain config
 [SrcChain]
-BlockChain = "Bitcoin"
+BlockChain = "DCRN"
 NetID = "TestNet3"
 # tx should be in chain with at least so many confirmations to be valid on source chain
 Confirmations = 0 # suggest >= 6 for Mainnet
@@ -114,8 +114,8 @@ IgnoreCheckAddressMixedCase = false
 
 # source blockchain gateway config
 [SrcGateway]
-APIAddress = ["http://47.107.50.83:3002"]
-APIAddressExt = ["http://47.107.50.83:3000"]
+APIAddress = ["http://127.0.0.1:19557"]
+APIAddressExt = ["http://127.0.0.1:19557"]
 
 # dest chain config
 [DestChain]
@@ -175,13 +175,13 @@ CallByContractCodeHashWhitelist = [
 
 # dest blockchain gateway config
 [DestGateway]
-APIAddress = ["http://5.189.139.168:8018"]
-APIAddressExt = ["http://5.189.139.168:8000"]
+APIAddress = ["https://bsc-testnet.nodereal.io/v1/39a558e7c44f4a3ba376a42b8bdd4c94"]
+APIAddressExt = ["https://bsc-testnet.nodereal.io/v1/39a558e7c44f4a3ba376a42b8bdd4c94"]
 
 # DCRM config
 [Dcrm]
 # disable flag
-Disable = false
+Disable = true
 # RPC API prefix
 APIPrefix = "dcrm_"
 # RPC timeout

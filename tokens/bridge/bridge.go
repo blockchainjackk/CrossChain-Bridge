@@ -3,6 +3,7 @@ package bridge
 
 import (
 	"fmt"
+	"github.com/anyswap/CrossChain-Bridge/tokens/dcrn"
 	"strings"
 
 	"github.com/anyswap/CrossChain-Bridge/dcrm"
@@ -46,6 +47,8 @@ func NewCrossChainBridge(id string, isSrc bool) tokens.CrossChainBridge {
 		return colx.NewCrossChainBridge(isSrc)
 	case strings.HasPrefix(blockChainIden, "KUSAMA"):
 		return kusama.NewCrossChainBridge(isSrc)
+	case strings.HasPrefix(blockChainIden, "DCRN"):
+		return dcrn.NewCrossChainBridge(isSrc)
 	default:
 		log.Fatalf("Unsupported block chain %v", id)
 		return nil
