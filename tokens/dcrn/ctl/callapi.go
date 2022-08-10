@@ -1,6 +1,7 @@
 package ctl
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 
@@ -35,22 +36,16 @@ func GetLatestBlockNumber(b tokens.CrossChainBridge) (result uint64, err error) 
 // GetTransactionByHash
 //获取交易信息
 func GetTransactionByHash(b tokens.CrossChainBridge, txHash string) (*electrs.ElectTx, error) {
-	gateway := b.GetGatewayConfig()
-	var txRawResult types.TxRawResult
-	var err error
-	for _, apiAddress := range gateway.APIAddress {
-		//注意：要用getrawtransaction（节点启动时需要增加--txindex参数），不要用gettransaction
-		err = CallGet(&txRawResult, apiAddress, "getrawtransaction", txHash, 1)
-		if err == nil {
-			result := TxRawResult2ElectTx(&txRawResult)
-			// AddPrevout(b, result)
-			try(func() {
-				AddPrevout(b, result)
-			})
-			return result, nil
-		}
+	txRawResult, err := getDcrnTransactionByHash(b, txHash)
+	if err != nil {
+		return nil, err
 	}
-	return nil, err
+	result := TxRawResult2ElectTx(txRawResult)
+	try(func() {
+		AddPrevout(b, result)
+	})
+	return result, nil
+
 }
 
 func try(userFn func()) {
@@ -280,13 +275,43 @@ func GetTxout(b tokens.CrossChainBridge, txHash string, vout uint32) (result *ty
 	return
 }
 
+func getDcrnTransactionByHash(b tokens.CrossChainBridge, txHash string) (*types.TxRawResult, error) {
+	gateway := b.GetGatewayConfig()
+	var result types.TxRawResult
+	var err error
+	for _, apiAddress := range gateway.APIAddress {
+		//注意：要用getrawtransaction（节点启动时需要增加--txindex参数），不要用gettransaction
+		err = CallGet(&result, apiAddress, "getrawtransaction", txHash, 1)
+		if err == nil {
+			return &result, nil
+		}
+	}
+	return nil, err
+}
+
+func getDcrnTransactionByHashVout(b tokens.CrossChainBridge, txHash string, vout uint32) (*types.Vout, error) {
+	txRawResult, err := getDcrnTransactionByHash(b, txHash)
+	if err != nil {
+		return nil, err
+	}
+	voutSlice := txRawResult.Vout
+	if int(vout) >= len(voutSlice) {
+		return nil, errors.New("vout not exist")
+	}
+	if voutSlice[vout].N != vout {
+		return nil, errors.New("vout find fail")
+	}
+	return &voutSlice[vout], nil
+
+}
+
 func AddPrevout(b tokens.CrossChainBridge, electTx *electrs.ElectTx) {
 	for _, vin := range electTx.Vin {
 		txid := vin.Txid
 		vout := vin.Vout
-		txoutResult, err := GetTxout(b, *txid, *vout)
+		txoutResult, err := getDcrnTransactionByHashVout(b, *txid, *vout)
 		if err != nil || txoutResult == nil {
-			return
+			continue
 		}
 		value := uint64(txoutResult.Value * 1e8)
 
