@@ -43,10 +43,23 @@ func GetTransactionByHash(b tokens.CrossChainBridge, txHash string) (*electrs.El
 		err = CallGet(&txRawResult, apiAddress, "getrawtransaction", txHash, 1)
 		if err == nil {
 			result := TxRawResult2ElectTx(&txRawResult)
+			// AddPrevout(b, result)
+			try(func() {
+				AddPrevout(b, result)
+			})
 			return result, nil
 		}
 	}
 	return nil, err
+}
+
+func try(userFn func()) {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Printf("err occurs: %v\n", err)
+		}
+	}()
+	userFn()
 }
 
 //GetTransactionStatus
@@ -107,14 +120,10 @@ func GetTransactionHistory(b tokens.CrossChainBridge, addr, lastSeenTxid string)
 
 // GetOutspend
 func GetOutspend(b tokens.CrossChainBridge, txHash string, vout uint32) (result *electrs.ElectOutspend, err error) {
-	gateway := b.GetGatewayConfig()
-	var txOutResult types.GetTxOutResult
-	for _, apiAddress := range gateway.APIAddress {
-		err = CallGet(&txOutResult, apiAddress, "gettxout", txHash, vout, true)
-		if err == nil {
-			result = TxOutResult2ElectOutspend(&txOutResult)
-			return result, nil
-		}
+	txOutResult, err := GetTxout(b, txHash, vout)
+	if err == nil {
+		result = TxOutResult2ElectOutspend(txOutResult)
+		return result, nil
 	}
 	return
 }
@@ -251,10 +260,72 @@ func SignRawtransaction(b tokens.CrossChainBridge, hex string) (signedHex string
 func Decoderawtransaction(b tokens.CrossChainBridge, hexTx string) (result *types.TxRawDecodeResult, err error) {
 	gateway := b.GetGatewayConfig()
 	for _, apiAddress := range gateway.APIAddress {
-		err := CallGet(&result, apiAddress, "decoderawtransaction", hexTx)
+		err = CallGet(&result, apiAddress, "decoderawtransaction", hexTx)
 		if err == nil {
 			return result, nil
 		}
 	}
 	return
+}
+
+// GetTxout
+func GetTxout(b tokens.CrossChainBridge, txHash string, vout uint32) (result *types.GetTxOutResult, err error) {
+	gateway := b.GetGatewayConfig()
+	for _, apiAddress := range gateway.APIAddress {
+		err = CallGet(&result, apiAddress, "gettxout", txHash, vout, true)
+		if err == nil {
+			return result, nil
+		}
+	}
+	return
+}
+
+func AddPrevout(b tokens.CrossChainBridge, electTx *electrs.ElectTx) {
+	for _, vin := range electTx.Vin {
+		txid := vin.Txid
+		vout := vin.Vout
+		txoutResult, err := GetTxout(b, *txid, *vout)
+		if err != nil || txoutResult == nil {
+			return
+		}
+		value := uint64(txoutResult.Value * 1e8)
+
+		prevout := &electrs.ElectTxOut{
+			// Scriptpubkey:        &txoutResult.ScriptPubKey,//暂时用不到
+			ScriptpubkeyAsm:  &txoutResult.ScriptPubKey.Asm,
+			ScriptpubkeyType: &txoutResult.ScriptPubKey.Type,
+			//对于p2pkh类型的交易，该地址应该只有一个
+			ScriptpubkeyAddress: &txoutResult.ScriptPubKey.Addresses[0],
+			Value:               &value,
+		}
+		vin.Prevout = prevout
+	}
+}
+
+// GetTransactionByHash
+//获取交易信息
+func GetDcrnTransactionByHash(b tokens.CrossChainBridge, txHash string) (*types.TxRawResult, error) {
+	gateway := b.GetGatewayConfig()
+	var txRawResult types.TxRawResult
+	var err error
+	for _, apiAddress := range gateway.APIAddress {
+		//注意：要用getrawtransaction（节点启动时需要增加--txindex参数），不要用gettransaction
+		err = CallGet(&txRawResult, apiAddress, "getrawtransaction", txHash, 1)
+		if err == nil {
+			return &txRawResult, nil
+		}
+	}
+	return nil, err
+}
+
+//
+func Verifymessage(b tokens.CrossChainBridge, address, signature, message string) (result bool, err error) {
+	gateway := b.GetGatewayConfig()
+	for _, apiAddress := range gateway.APIAddress {
+		err = CallGet(&result, apiAddress, "verifymessage", address, signature, message)
+		if err == nil {
+			return result, nil
+		}
+	}
+	return false, err
 }
