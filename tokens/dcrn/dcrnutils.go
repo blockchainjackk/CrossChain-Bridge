@@ -26,7 +26,7 @@ func isValidValue(value dcrnAmountType) bool {
 
 func newAmount(value float64) (dcrnAmountType, error) {
 	amount, err := dcrutil.NewAmount(value)
-	return dcrnAmountType(amount), err
+	return amount, err
 }
 
 // GetChainParams get chain config (net params)
@@ -35,6 +35,8 @@ func (b *Bridge) GetChainParams() *chaincfg.Params {
 	switch networkID {
 	case netMainnet:
 		return chaincfg.MainNetParams()
+	case netSimnet:
+		return chaincfg.SimNetParams()
 	default:
 		return chaincfg.TestNet3Params()
 	}

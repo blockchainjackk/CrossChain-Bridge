@@ -518,11 +518,12 @@ func doSwap(args *tokens.BuildTxArgs) (err error) {
 		return err
 	}
 
-	txHash, err := sendSignedTransaction(resBridge, signedTx, args)
-	if err == nil && txHash != signTxHash {
-		logWorkerError("doSwap", "send tx success but with different hash", errSendTxWithDiffHash, "pairID", pairID, "txid", txid, "bind", bind, "isSwapin", isSwapin, "swapNonce", swapNonce, "txHash", txHash, "signTxHash", signTxHash)
-		_ = mongodb.UpdateSwapResultOldTxs(txid, pairID, bind, txHash, matchTx.SwapValue, isSwapin)
-	}
+	_, err = sendSignedTransaction(resBridge, signedTx, args)
+	//todo signTxHash
+	//if err == nil && txHash != signTxHash {
+	//	logWorkerError("doSwap", "send tx success but with different hash", errSendTxWithDiffHash, "pairID", pairID, "txid", txid, "bind", bind, "isSwapin", isSwapin, "swapNonce", swapNonce, "txHash", txHash, "signTxHash", signTxHash)
+	//	_ = mongodb.UpdateSwapResultOldTxs(txid, pairID, bind, txHash, matchTx.SwapValue, isSwapin)
+	//}
 	return err
 }
 

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"sort"
+	"strings"
 
 	"github.com/anyswap/CrossChain-Bridge/tokens"
 	"github.com/anyswap/CrossChain-Bridge/tokens/btc/electrs"
@@ -60,11 +61,12 @@ func try(userFn func()) {
 //GetTransactionStatus
 //获取交易状态
 func GetTransactionStatus(b tokens.CrossChainBridge, txHash string) (*electrs.ElectTxStatus, error) {
-	transaction, err := GetTransactionByHash(b, txHash)
+	txRawResult, err := getDcrnTransactionByHash(b, txHash)
 	if err != nil {
 		return nil, err
 	}
-	status := transaction.Status
+	result := TxRawResult2ElectTx(txRawResult)
+	status := result.Status
 	return status, nil
 }
 
@@ -132,7 +134,7 @@ func PostTransaction(b tokens.CrossChainBridge, txHex string) (txHash string, er
 		hash0, err0 := CallPost(apiAddress, "sendrawtransaction", txHex)
 		if err0 == nil && !success {
 			success = true
-			txHash = hash0
+			txHash = strings.Trim(hash0, "\"")
 		} else if err0 != nil {
 			err = err0
 		}

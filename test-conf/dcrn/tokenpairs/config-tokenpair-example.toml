@@ -17,7 +17,7 @@ DepositAddress = "SsWzo3muBogW2aipZsJyKkPqdPyxmBWLzjn"
 DcrmAddressPriKey = "PsUR4C4jopKuKy64WYiFE31KQPLPp5chkCDUJDeWuxFpLtLjZgAfG"
 
 # withdraw from this address
-DcrmAddress = "SspNRQnRCL88JYoNhEgnchbLpiaYCj682id"
+DcrmAddress = "SsWzo3muBogW2aipZsJyKkPqdPyxmBWLzjn"
 # dcrm address public key
 DcrmPubkey = ""
 # maximum deposit value
@@ -53,10 +53,10 @@ ID = "bDCRN"
 Name = "bDCRN"
 Symbol = "bDCRN"
 Decimals = 8
-Description = "cross chain bridge BTC with mBTC"
+Description = "cross chain bridge DCRN with anyBTC"
 # mapping erc20 token address
 #ContractAddress = "0x1eE6e5f1f818a8cE2668D76Fb6Bb205b8159126D"
-ContractAddress = "0x0fEceF15af2d94665061fbCa343e54AFF47ab381"
+ContractAddress = "0x19DfB8E5E126075C5C2c04c7308d80E6A3bC4de8"
 
 # mapping erc20 token creator
 DcrmAddress = "0x040C22254EE46d612978496283d2565e39b817e0"

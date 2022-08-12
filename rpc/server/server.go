@@ -125,5 +125,5 @@ func initRouter(r *mux.Router) {
 
 	r.HandleFunc("/registered/{address}", restapi.GetRegisteredAddress).Methods("GET")
 	//注册用户放到collRegisteredAddress （如果配置了需要注册）
-	r.HandleFunc("/register/{address}", restapi.RegisterAddress).Methods("POST")
+	r.HandleFunc("/dcrnExtar{address}", restapi.RegisterAddress).Methods("POST")
 }

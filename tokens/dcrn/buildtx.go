@@ -295,7 +295,7 @@ func (b *Bridge) selectUtxos(from string, target dcrnAmountType) (detail *txauth
 
 	inputs := make([]*wire.TxIn, 0)
 	scripts := make([][]byte, 0)
-
+	detail = &txauthor.InputDetail{}
 	for _, utxo := range utxos {
 		value := dcrnAmountType(*utxo.Value)
 		if !isValidValue(value) {
@@ -350,7 +350,7 @@ func (b *Bridge) getUtxos(from string, target dcrnAmountType, prevOutPoints []*t
 	var total dcrnAmountType
 	inputs := make([]*wire.TxIn, 0)
 	scripts := make([][]byte, 0)
-
+	detail = &txauthor.InputDetail{}
 	for _, point := range prevOutPoints {
 		outspend, errf := b.getOutspendWithRetry(point)
 		if errf != nil {

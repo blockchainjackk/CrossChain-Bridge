@@ -32,7 +32,11 @@ func TxStatus(tx *types.TxRawResult) *electrs.ElectTxStatus {
 		BlockHash:   new(string),
 		BlockTime:   new(uint64),
 	}
-	*status.Confirmed = tx.Confirmations > 6
+	if tx.BlockHeight > 0 && tx.Confirmations > 0 {
+		*status.Confirmed = true
+	} else {
+		*status.Confirmed = false
+	}
 	*status.BlockHeight = uint64(tx.BlockHeight)
 	*status.BlockHash = tx.BlockHash
 	*status.BlockTime = uint64(tx.Blocktime)
