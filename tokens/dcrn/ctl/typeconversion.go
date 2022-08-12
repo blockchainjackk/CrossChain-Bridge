@@ -119,12 +119,14 @@ func ConvertVin(vin *types.Vin) *electrs.ElectTxin {
 		ScriptsigAsm: new(string),
 		IsCoinbase:   new(bool),
 		Sequence:     &vin.Sequence,
+		Prevout:      new(electrs.ElectTxOut),
 	}
 	if vin.ScriptSig != nil {
 		*evin.Scriptsig = vin.ScriptSig.Hex
 		*evin.ScriptsigAsm = vin.ScriptSig.Asm
 	}
 	*evin.IsCoinbase = (vin.Coinbase != "")
+	//Prevout参数的填充后续由AddPrevout函数实现
 	return evin
 }
 
