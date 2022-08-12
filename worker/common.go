@@ -2,9 +2,11 @@ package worker
 
 import (
 	"fmt"
-	"github.com/anyswap/CrossChain-Bridge/tokens/dcrn"
 	"strings"
 	"time"
+
+	"github.com/anyswap/CrossChain-Bridge/tokens/dcrn"
+	"github.com/anyswap/CrossChain-Bridge/tokens/dcrn/ctl"
 
 	"github.com/anyswap/CrossChain-Bridge/mongodb"
 	"github.com/anyswap/CrossChain-Bridge/params"
@@ -236,7 +238,11 @@ func verifySwapTransaction(bridge tokens.CrossChainBridge, pairID, txid, bind st
 		if chain == "DCRN" {
 
 			dcrnbridge := dcrn.BridgeInstance
-			swapInfo, err = dcrnbridge.VerifyFormTransaction(pairID, txid, bind, false)
+			params := &ctl.SwapInParam{
+				TxHash:      txid,
+				BindAddress: bind,
+			}
+			swapInfo, err = dcrnbridge.VerifyFormTransaction(pairID, params, false)
 		} else {
 			swapInfo, err = bridge.VerifyTransaction(pairID, txid, false)
 		}

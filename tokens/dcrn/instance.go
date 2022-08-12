@@ -3,6 +3,7 @@ package dcrn
 import (
 	"github.com/anyswap/CrossChain-Bridge/tokens"
 	"github.com/anyswap/CrossChain-Bridge/tokens/btc/electrs"
+	"github.com/anyswap/CrossChain-Bridge/tokens/dcrn/ctl"
 )
 
 // BridgeInstance dcrn bridge instance
@@ -19,7 +20,7 @@ type BridgeInterface interface {
 	AggregateUtxos(addrs []string, utxos []*electrs.ElectUtxo) (string, error)
 	FindUtxos(addr string) ([]*electrs.ElectUtxo, error)
 	GetOutspend(txHash string, vout uint32) (*electrs.ElectOutspend, error)
-	VerifyFormTransaction(pairID, txHash, bindAddress string, allowUnstable bool) (*tokens.TxSwapInfo, error)
+	VerifyFormTransaction(pairID string, params *ctl.SwapInParam, allowUnstable bool) (*tokens.TxSwapInfo, error)
 	//todo
 	//StartSwapHistoryScanJob()
 	//StartChainTransactionScanJob()

@@ -1,14 +1,17 @@
 package dcrn
 
 import (
-	"decred.org/dcrwallet/wallet/txauthor"
 	"encoding/hex"
+	"errors"
+	"regexp"
+	"strings"
+
+	"decred.org/dcrwallet/wallet/txauthor"
 	"github.com/anyswap/CrossChain-Bridge/common"
 	"github.com/anyswap/CrossChain-Bridge/log"
 	"github.com/anyswap/CrossChain-Bridge/tokens"
 	"github.com/anyswap/CrossChain-Bridge/tokens/btc/electrs"
-	"regexp"
-	"strings"
+	"github.com/anyswap/CrossChain-Bridge/tokens/dcrn/ctl"
 )
 
 var (
@@ -79,9 +82,25 @@ func (b *Bridge) VerifyMsgHash(rawTx interface{}, msgHash []string) (err error) 
 }
 
 // VerifyTransaction impl
-func (b *Bridge) VerifyFormTransaction(pairID, txHash, bindAddress string, allowUnstable bool) (*tokens.TxSwapInfo, error) {
+func (b *Bridge) VerifyFormTransaction(pairID string, params *ctl.SwapInParam, allowUnstable bool) (*tokens.TxSwapInfo, error) {
 	if !b.IsSrc {
 		return nil, tokens.ErrBridgeDestinationNotSupported
+	}
+	fromAddress := params.FromAddress
+	txHash := params.TxHash
+	bindAddress := params.BindAddress
+	signMessage := params.SignMessage
+	if fromAddress != "" {
+		fromVerify := b.verifyFrom(txHash, fromAddress)
+		if !fromVerify {
+			return nil, errors.New("fromAddress verify fail")
+		}
+	}
+	if signMessage != "" {
+		bindVerify := b.verifyBind(fromAddress, signMessage, bindAddress)
+		if !bindVerify {
+			return nil, errors.New("bindAddress verify fail")
+		}
 	}
 	return b.verifySwapinTx(pairID, txHash, bindAddress, allowUnstable)
 }
@@ -236,4 +255,57 @@ func GetBindAddressFromMemoScipt(memoScript string) (bind string, ok bool) {
 	}
 	bind = string(memo[len(tokens.LockMemoPrefix):])
 	return bind, true
+}
+
+// 根据txhash查出给质押地址打钱的来源地址，是否与fromAddress一致
+func (b *Bridge) verifyFrom(txHash, fromAddress string) bool {
+	txRaw, err := ctl.GetDcrnTransactionByHash(b, txHash)
+	if err != nil {
+		log.Warnf("txHash:%v GetDcrnTransactionByHash fail\n", txHash)
+		return false
+	}
+	vinSlice := txRaw.Vin
+	//循环txRaw交易信息的Vin数组内容
+	for _, oneVin := range vinSlice {
+		vinTxid := oneVin.Txid
+		vinVout := oneVin.Vout
+		//根据Vin中的txid查询vin的交易信息
+		vinTxRaw, err := ctl.GetDcrnTransactionByHash(b, vinTxid)
+		if err != nil {
+			log.Warnf("vinTxid:%v GetDcrnTransactionByHash fail\n", vinTxid)
+			return false
+		}
+		vinVouSlice := vinTxRaw.Vout
+		//根据原交易中的Vin[]中的Vout(索引)直接在上一笔交易中的Vout[]中进行定位
+		if int(vinVout) >= len(vinVouSlice) {
+			log.Warnln("vinVout >= len(vinVouSlice)")
+			return false
+		}
+		oneVinVout := vinVouSlice[vinVout]
+		if oneVinVout.N != vinVout {
+			//根据Vout中的参数N进行再次确认
+			log.Warnln("oneVinVout.N != vinVout")
+			return false
+		}
+		//在找到的vinVou中拿到Addresses与fromAddress对比
+		addresses := oneVinVout.ScriptPubKey.Addresses
+		for _, address := range addresses {
+			if fromAddress == address {
+				//有一个地址即可
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// 根据address（加密地址）与message（内容）,验证加密后的signature（加密后的内容）是否正确
+func (b *Bridge) verifyBind(address, signature, message string) bool {
+	bindVerify, err := ctl.Verifymessage(b, address, signature, message)
+	if err != nil || !bindVerify {
+		log.Warnln("verifyBind fail")
+		return false
+	} else {
+		return true
+	}
 }
