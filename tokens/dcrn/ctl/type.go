@@ -70,3 +70,10 @@ type SignRawTransactionResult struct {
 	Complete bool                      `json:"complete"`
 	Errors   []SignRawTransactionError `json:"errors,omitempty"`
 }
+
+type SwapInParam struct {
+	FromAddress string
+	TxHash      string
+	BindAddress string
+	SignMessage string
+}

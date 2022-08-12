@@ -2,10 +2,12 @@ package swapapi
 
 import (
 	"encoding/hex"
-	"github.com/anyswap/CrossChain-Bridge/tokens/dcrn"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/anyswap/CrossChain-Bridge/tokens/dcrn"
+	"github.com/anyswap/CrossChain-Bridge/tokens/dcrn/ctl"
 
 	"github.com/anyswap/CrossChain-Bridge/dcrm"
 	"github.com/anyswap/CrossChain-Bridge/log"
@@ -231,7 +233,7 @@ func Swapin(txid, pairID *string) (*PostResult, error) {
 }
 
 // SwapinDcrn api
-func SwapinDcrn(txid, bind *string) (*PostResult, error) {
+func SwapinDcrn(from, txid, bind, signMessage *string) (*PostResult, error) {
 	log.Debug("[api] receive Swapin", "txid", *txid, "bind", *bind)
 	if dcrn.BridgeInstance == nil {
 		return nil, errNotDcrnBridge
@@ -244,7 +246,13 @@ func SwapinDcrn(txid, bind *string) (*PostResult, error) {
 	if err := basicCheckSwapRegister(bridge, pairId); err != nil {
 		return nil, err
 	}
-	swapInfo, err := bridge.VerifyFormTransaction(pairId, txidstr, bindAddr, true)
+	params := &ctl.SwapInParam{
+		FromAddress: *from,
+		TxHash:      txidstr,
+		BindAddress: bindAddr,
+		SignMessage: *signMessage,
+	}
+	swapInfo, err := bridge.VerifyFormTransaction(pairId, params, true)
 	var txType tokens.SwapTxType
 	txType = tokens.SwapinTx
 

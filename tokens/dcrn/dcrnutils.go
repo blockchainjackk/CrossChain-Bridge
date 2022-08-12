@@ -1,14 +1,15 @@
 package dcrn
 
 import (
-	"decred.org/dcrwallet/wallet"
 	"fmt"
+	"strings"
+
+	"decred.org/dcrwallet/wallet"
 	"github.com/decred/dcrd/chaincfg/chainhash"
 	"github.com/decred/dcrd/chaincfg/v3"
 	"github.com/decred/dcrd/dcrutil/v3"
 	"github.com/decred/dcrd/txscript/v3"
 	"github.com/decred/dcrd/wire"
-	"strings"
 )
 
 // Inheritable interface
