@@ -140,9 +140,9 @@ func (b *Bridge) verifySwapinTx(pairID, txHash, bindAddr string, allowUnstable b
 		bindAddress = bindAddr
 	}
 
-	swapInfo.To = depositAddress                      // To
-	swapInfo.Value = common.BigFromUint64(value)      // Value
-	swapInfo.Bind = bindAddress                       // Bind
+	swapInfo.To = depositAddress                 // To
+	swapInfo.Value = common.BigFromUint64(value) // Value
+	swapInfo.Bind = bindAddress
 	swapInfo.From = getTxFrom(tx.Vin, depositAddress) // From
 
 	err = b.checkSwapinInfo(swapInfo)

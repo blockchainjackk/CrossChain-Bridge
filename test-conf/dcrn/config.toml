@@ -120,7 +120,7 @@ APIAddressExt = ["http://127.0.0.1:19557"]
 # dest chain config
 [DestChain]
 BlockChain = "Ethereum"
-NetID = "Rinkeby"
+NetID = "Rinkeby-bsc"
 # tx should be in chain with at least so many confirmations to be valid on source chain
 Confirmations = 0 # suggest >= 30 for Mainnet
 # only tx with block height >= this initial height should be considered valid on source chain
@@ -150,7 +150,7 @@ WaitTimeToReplace = 900
 # max replace swap count
 MaxReplaceCount = 20
 # use fixed gas price (no adjust)
-FixedGasPrice = "5000000001"
+FixedGasPrice = "6000000001"
 # maximum gas price
 MaxGasPrice = "50000000000"
 # minimum reserve coin for gas provide (defaults to 1e17 wei)
@@ -174,9 +174,12 @@ CallByContractCodeHashWhitelist = [
 ]
 
 # dest blockchain gateway config
+
 [DestGateway]
-APIAddress = ["https://bsc-testnet.nodereal.io/v1/39a558e7c44f4a3ba376a42b8bdd4c94"]
-APIAddressExt = ["https://bsc-testnet.nodereal.io/v1/39a558e7c44f4a3ba376a42b8bdd4c94"]
+#APIAddress = ["https://rinkeby.infura.io/v3/3d1d1da6d3df414d916dffc285cab3f3"]
+#APIAddressExt = ["https://rinkeby.infura.io/v3/3d1d1da6d3df414d916dffc285cab3f3"]
+APIAddress = ["https://bsc-testnet.nodereal.io/v1/833715263e6345208c300e0c727f1d8c"]
+APIAddressExt = ["https://bsc-testnet.nodereal.io/v1/833715263e6345208c300e0c727f1d8c"]
 
 # DCRM config
 [Dcrm]

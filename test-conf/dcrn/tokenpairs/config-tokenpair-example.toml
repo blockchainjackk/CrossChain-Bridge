@@ -49,18 +49,19 @@ BigValueWhitelist = [
 
 # dest token config
 [DestToken]
-ID = "mDCRN"
-Name = "mDCRN"
-Symbol = "mDCRN"
+ID = "bDCRN"
+Name = "bDCRN"
+Symbol = "bDCRN"
 Decimals = 8
 Description = "cross chain bridge BTC with mBTC"
 # mapping erc20 token address
-ContractAddress = "0xd2656eA85A91556E08AcF3Fb1f19b940967cBa20"
-# mapping erc20 token creator
-DcrmAddress = "0x30542709eaEA5Db50bFD00B00FCcA150192c5a60"
+#ContractAddress = "0x1eE6e5f1f818a8cE2668D76Fb6Bb205b8159126D"
+ContractAddress = "0x0fEceF15af2d94665061fbCa343e54AFF47ab381"
 
-# mutichain2 priky  as DCRM
-DcrmAddressPriKey = "1ffa05c8f791460d868c8fbc71496f1a7c2a10cc0a3063554b12849c22a2955e"
+# mapping erc20 token creator
+DcrmAddress = "0x040C22254EE46d612978496283d2565e39b817e0"
+# mutichain1 priky  as DCRM
+DcrmAddressPriKey = "47f909f570c10408b254ca6c11f0935fb65e0f2379e752ddfccd9a475691e43e"
 
 # dcrm address public key
 DcrmPubkey = "04c1d78f946714f3573bf9f3596a9f8e2bc6f423ea1f37fede76e2da914134e3e699aa820a2e3fc64a1e0c5b11914c9338b7ae046fdbf76841521972bdf16e79bb"

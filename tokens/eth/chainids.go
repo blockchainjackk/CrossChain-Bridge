@@ -9,10 +9,10 @@ import (
 var (
 	// ETH chain
 	EthNetworkAndChainIDMap = map[string]*big.Int{
-		"mainnet": big.NewInt(1),
-		//todo 暂时改成BSC，之后要改回来
-		"rinkeby": big.NewInt(97),
-		"goerli":  big.NewInt(5),
+		"mainnet":     big.NewInt(1),
+		"rinkeby":     big.NewInt(4),
+		"goerli":      big.NewInt(5),
+		"rinkeby-bsc": big.NewInt(97),
 	}
 
 	// ETC chain

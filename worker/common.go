@@ -2,6 +2,7 @@ package worker
 
 import (
 	"fmt"
+	"github.com/anyswap/CrossChain-Bridge/tokens/dcrn"
 	"strings"
 	"time"
 
@@ -230,7 +231,15 @@ func verifySwapTransaction(bridge tokens.CrossChainBridge, pairID, txid, bind st
 		}
 		swapInfo, err = btc.BridgeInstance.VerifyP2shTransaction(pairID, txid, bind, false)
 	default:
-		swapInfo, err = bridge.VerifyTransaction(pairID, txid, false)
+
+		chain := bridge.GetChainConfig().BlockChain
+		if chain == "DCRN" {
+
+			dcrnbridge := dcrn.BridgeInstance
+			swapInfo, err = dcrnbridge.VerifyFormTransaction(pairID, txid, bind, false)
+		} else {
+			swapInfo, err = bridge.VerifyTransaction(pairID, txid, false)
+		}
 	}
 	if swapInfo == nil {
 		return nil, fmt.Errorf("empty swapinfo after verify tx")

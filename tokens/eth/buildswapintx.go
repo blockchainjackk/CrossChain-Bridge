@@ -15,7 +15,6 @@ func (b *Bridge) buildSwapinTxInput(args *tokens.BuildTxArgs) (err error) {
 	if token == nil {
 		return tokens.ErrUnknownPairID
 	}
-
 	receiver := common.HexToAddress(args.Bind)
 	if receiver == (common.Address{}) || !common.IsHexAddress(args.Bind) {
 		log.Warn("swapin to wrong address", "receiver", args.Bind)
