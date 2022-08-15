@@ -85,7 +85,7 @@ func testFindUtxos() {
 }
 
 func testSignRawtransaction() {
-	hex := "010000000112a9c3b8ebff5a3810123dfc465daac637d7efd0155c9273719e377153bcdce20000000000ffffffff0200e1f5050000000000001976a914000000000000000000000000000000000000000088ac80ce341d0000000000001976a9145332bb44a27de855edcf2005cdd5b554577e824588ac0000000000000000018011c3230000000000000000ffffffff00"
+	hex := "0100000001d5b529633c50723718f5d03f83d07b285a1239d1df18a192649fa61022b0d1db0100000000ffffffff0200e288c00600000000001976a9142a4d9926d8eb237a94a9f870c818a6b2b58aafa688ac00ab90410000000000001976a91403cb5e3a2f8a63af33f1950d96d9d3649326ac1988ac000000000000000001008d19020700000000000000ffffffff00"
 	//first
 	signedHex, err := ctl.CallPost(apiAddress, "signrawtransaction", hex)
 	if err == nil {
@@ -94,9 +94,10 @@ func testSignRawtransaction() {
 		fmt.Println("err:", err)
 	}
 	//second
-	signedHex2, _, err := ctl.SignRawtransaction(bridge, hex)
+	signedHex2, txHash, err := ctl.SignRawtransaction(bridge, hex)
 	if err == nil {
 		fmt.Printf("signedHex2:%v;type:%T\n", signedHex2, signedHex2)
+		fmt.Printf("txHash:%v;type:%T\n", txHash, txHash)
 	} else {
 		fmt.Println("err:", err)
 	}

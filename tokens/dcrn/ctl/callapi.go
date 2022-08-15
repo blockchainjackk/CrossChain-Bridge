@@ -243,17 +243,32 @@ func CreateRawTransaction() {
 
 //签名交易
 func SignRawtransaction(b tokens.CrossChainBridge, hex string) (signedHex string, txHash string, err error) {
+
+	signedHex, err = SignRawtransactionDcrn(b, hex)
+	if err != nil {
+		return
+	}
+	txRawDecodeResult, err := Decoderawtransaction(b, signedHex)
+	if err != nil {
+		return
+	}
+	return signedHex, txRawDecodeResult.Txid, nil
+}
+
+//签名Dcrn交易
+func SignRawtransactionDcrn(b tokens.CrossChainBridge, hex string) (signedHex string, err error) {
 	gateway := b.GetGatewayConfig()
 	var resultSignRawTransaction SignRawTransactionResult
 	for _, apiAddress := range gateway.APIAddress {
 		err = CallGet(&resultSignRawTransaction, apiAddress, "signrawtransaction", hex)
 		if err == nil {
-			return resultSignRawTransaction.Hex, "", nil
+			return resultSignRawTransaction.Hex, nil
 		}
 	}
-	return signedHex, "", err
+	return signedHex, err
 }
 
+// 解码交易
 func Decoderawtransaction(b tokens.CrossChainBridge, hexTx string) (result *types.TxRawDecodeResult, err error) {
 	gateway := b.GetGatewayConfig()
 	for _, apiAddress := range gateway.APIAddress {
