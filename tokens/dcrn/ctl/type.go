@@ -72,8 +72,8 @@ type SignRawTransactionResult struct {
 }
 
 type SwapInParam struct {
-	FromAddress string
-	TxHash      string
-	BindAddress string
-	SignMessage string
+	FromAddress string `json:"fromAddress"`
+	TxHash      string `json:"txHash"`
+	BindAddress string `json:"bindAddress"`
+	SignMessage string `json:"signMessage"`
 }
