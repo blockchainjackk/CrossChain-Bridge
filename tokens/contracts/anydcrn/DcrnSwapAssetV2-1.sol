@@ -619,7 +619,7 @@ contract DcrnSwapAssetV2 is ERC20, ERC20Detailed {
     }
 
     function Swapout(uint256 amount, string memory bindaddr) public returns (bool) {
-       // verifyBindAddr(bindaddr);
+        verifyBindAddr(bindaddr);
         _burn(_msgSender(), amount);
         emit LogSwapout(_msgSender(), amount, bindaddr);
         return true;
@@ -630,20 +630,20 @@ contract DcrnSwapAssetV2 is ERC20, ERC20Detailed {
         return true;
     }
 
-    function verifyBindAddr(string memory bindaddr) pure internal {
+
+    function verifyBindAddr(string memory bindaddr) pure public returns (bool){
         uint length = bytes(bindaddr).length;
-        require(length >= 26, "address length is too short");
+        require(length == 35, "address length error");
 
         byte ch = bytes(bindaddr)[0];
         byte ch2 = bytes(bindaddr)[1];
-        byte ch3 = bytes(bindaddr)[2];
 
-        if (ch == '1' || ch == '3') {
-            require(length <= 34, "mainnet address length is too long");
-        } else if (ch == '2' || ch == 'm' || ch == 'n') {
-            require(length <= 35, "testnet address length is too long");
-        } else if ((ch3 == '1') && ((ch == 'b' && ch2 == 'c') || (ch == 't' && ch2 == 'b'))) {
-            require(length == 42 || length == 62, "segwit address length is not 42 or 62");
+        if (ch == 'D' || ch == 'T' || ch == 'S') {
+            if (ch2 == 'k' || ch2 == 's' || ch2 == 'e' || ch2 == 'S' || ch2 == 'c') {
+                return true;
+            } else {
+                require(false, "unsupported address leading symbol");
+            }
         } else {
             require(false, "unsupported address leading symbol");
         }

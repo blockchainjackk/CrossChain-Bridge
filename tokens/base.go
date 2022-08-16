@@ -189,25 +189,25 @@ func CalcSwappedValue(pairID string, value *big.Int, isSrc bool, from, txto stri
 	if value == nil || value.Sign() <= 0 {
 		return big.NewInt(0)
 	}
-
+	//bDCRN  DCRN
 	token, cpToken := GetTokenConfigsByDirection(pairID, isSrc)
-
+	//和最小swap值做对比
 	if value.Cmp(token.minSwap) < 0 {
 		return big.NewInt(0)
 	}
-
+	//是否在big白名单
 	isInBigValueWhitelist := token.IsInBigValueWhitelist(from) || token.IsInBigValueWhitelist(txto)
-
+	//和最大值对比
 	if !isInBigValueWhitelist && value.Cmp(token.maxSwap) > 0 {
 		return big.NewInt(0)
 	}
-
+	//判断FeeRate是否为0.0
 	if *token.SwapFeeRate == 0.0 {
 		return ConvertTokenValue(value, *token.Decimals, *cpToken.Decimals)
 	}
 
 	var swapFee, adjustBaseFee *big.Int
-
+	//计算swapFee，是否在BigValue白名单，如果是白名单的话，就按照最低Fee率
 	if isInBigValueWhitelist {
 		swapFee = token.minSwapFee
 	} else {
