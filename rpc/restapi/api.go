@@ -10,6 +10,7 @@ import (
 	"github.com/anyswap/CrossChain-Bridge/internal/swapapi"
 	"github.com/anyswap/CrossChain-Bridge/log"
 	"github.com/anyswap/CrossChain-Bridge/params"
+	"github.com/anyswap/CrossChain-Bridge/tokens/dcrn/ctl"
 	"github.com/gorilla/mux"
 )
 
@@ -238,11 +239,15 @@ func PostSwapinHandler(w http.ResponseWriter, r *http.Request) {
 
 // PostSwapinHandler handler
 func PostSwapinDcrnHandler(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	from := vars["from"]
-	txid := vars["txid"]
-	bind := vars["bind"]
-	signMessage := vars["signmessage"]
+	var reqdata ctl.SwapInParam
+	if err := json.NewDecoder(r.Body).Decode(&reqdata); err != nil {
+		r.Body.Close()
+		writeResponse(w, nil, err)
+	}
+	from := reqdata.FromAddress
+	txid := reqdata.TxHash
+	bind := reqdata.BindAddress
+	signMessage := reqdata.SignMessage
 	res, err := swapapi.SwapinDcrn(&from, &txid, &bind, &signMessage)
 	writeResponse(w, res, err)
 }
