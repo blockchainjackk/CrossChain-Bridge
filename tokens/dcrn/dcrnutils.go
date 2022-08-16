@@ -51,7 +51,6 @@ func (b *Bridge) GetChainParams() *chaincfg.Params {
 
 // GetPayToAddrScript get pay to address script
 func (b *Bridge) GetPayToAddrScript(address string) (pkScript []byte, version uint16, err error) {
-	//todo 在DecodeAddress中有问题
 	toAddr, err := b.DecodeAddress(address)
 	if err != nil {
 		return nil, 0, fmt.Errorf("decode dcrn address '%v' failed. %w", address, err)
@@ -68,10 +67,15 @@ func (b *Bridge) GetPayToAddrScript(address string) (pkScript []byte, version ui
 
 // NullDataScript encap
 func (b *Bridge) NullDataScript(memo string) ([]byte, error) {
-	//todo dcrn 中没有这个函数了
-	//txscript.NullDataScript([]byte(memo))
+	bmemo := []byte(memo)
+	if len(bmemo) > txscript.MaxDataCarrierSize {
+		str := fmt.Sprintf("data size %d is larger than max "+
+			"allowed size %d", len(bmemo), txscript.MaxDataCarrierSize)
+		return nil, fmt.Errorf(str)
+	}
 
-	return nil, nil
+	script, err := txscript.NewScriptBuilder().AddOp(txscript.OP_RETURN).AddData(bmemo).Script()
+	return script, err
 
 }
 
@@ -95,7 +99,7 @@ func (b *Bridge) GetP2shRedeemScript(memo, pubKeyHash []byte) (redeemScript []by
 		Script()
 }
 
-// NewTxIn new txin //todo 注意用它的地方传参数
+// NewTxIn new txin
 func (b *Bridge) NewTxIn(txid string, vout uint32, value int64, pkScript []byte) (*wire.TxIn, error) {
 	txHash, err := chainhash.NewHashFromStr(txid)
 	if err != nil {

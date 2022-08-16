@@ -290,7 +290,7 @@ func (b *Bridge) getGasPrice(args *tokens.BuildTxArgs) (price *big.Int, err erro
 			price = minGasPrice
 		}
 	}
-
+	// 调整gasprice
 	if args != nil && args.SwapType != tokens.NoSwapType {
 		price, err = b.adjustSwapGasPrice(args, price)
 		if err != nil {

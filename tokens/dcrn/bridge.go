@@ -31,7 +31,6 @@ func NewCrossChainBridge(isSrc bool) *Bridge {
 		log.Fatalf("dcrn::NewCrossChainBridge error %v", tokens.ErrBridgeDestinationNotSupported)
 	}
 	instance := &Bridge{CrossChainBridgeBase: tokens.NewCrossChainBridgeBase(isSrc)}
-	//todo
 	BridgeInstance = instance
 	instance.SetInherit(instance)
 	return instance

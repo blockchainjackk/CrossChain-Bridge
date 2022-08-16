@@ -315,7 +315,6 @@ func sendTxLoopUntilSuccess(bridge tokens.CrossChainBridge, txHash string, signe
 			_ = updateSwapResult(txid, pairID, bind, matchTx)
 			break
 		}
-		//todo  txHash可能不一样呢？ 一样signedTx会生成不一样的txID吗
 		_, err = bridge.SendTransaction(signedTx)
 		if err != nil {
 			logWorkerError("sendtx", "send tx in loop failed", err, "swapID", txid, "txHash", txHash, "loop", loop)

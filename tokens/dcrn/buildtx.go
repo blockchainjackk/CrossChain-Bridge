@@ -149,10 +149,8 @@ func (b *Bridge) BuildRawTransaction(args *tokens.BuildTxArgs) (rawTx interface{
 	var inputSource txauthor.InputSource
 	inputSource = func(target dcrutil.Amount) (detail *txauthor.InputDetail, err error) {
 		if len(extra.PreviousOutPoints) != 0 {
-			//todo
 			return b.getUtxos(from, target, extra.PreviousOutPoints)
 		}
-		//todo
 		return b.selectUtxos(from, target)
 	}
 
@@ -179,29 +177,6 @@ func (b *Bridge) BuildRawTransaction(args *tokens.BuildTxArgs) (rawTx interface{
 	return authoredTx, nil
 }
 
-//func makeScriptChangeSource(address string, version uint16, params *chaincfg.Params) (*scriptChangeSource, error) {
-//	destinationAddress, err := dcrutil.DecodeAddress(address, params)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	var script []byte
-//	if addr, ok := destinationAddress.(wallet.V0Scripter); ok && version == 0 {
-//		script = addr.ScriptV0()
-//	} else {
-//		script, err = txscript.PayToAddrScript(destinationAddress)
-//		if err != nil {
-//			return nil, err
-//		}
-//	}
-//
-//	source := &scriptChangeSource{
-//		version: version,
-//		script:  script,
-//	}
-//
-//	return source, nil
-//}
 func (b *Bridge) getTxOutputs(to string, amount *big.Int, memo string) (txOuts []*wireTxOutType, err error) {
 	if amount != nil {
 		err = b.addPayToAddrOutput(&txOuts, to, amount.Int64())

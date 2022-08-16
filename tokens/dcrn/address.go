@@ -12,14 +12,7 @@ func (b *Bridge) DecodeAddress(addr string) (address dcrutil.Address, err error)
 	if err != nil {
 		return
 	}
-	//todo
-	// dcrn has no IsForNet 判断地址是否符合此网络
-	//可以通过反推出netID，和参数中的netID做对比，参见dcrutil.DecodeAddress(addr, chainConfig)实现
-	//decoded, netID, err := base58.CheckDecode(addr)
-	//if !address.IsForNet(chainConfig) {
-	//	err = fmt.Errorf("invalid address for net")
-	//	return
-	//}
+
 	return
 }
 
@@ -52,6 +45,6 @@ func (b *Bridge) IsP2pkhAddress(addr string) bool {
 
 // DecodeWIF decode wif
 //todo 比比特币多一个net参数
-func DecodeWIF(wif string, net [2]byte) (*dcrutil.WIF, error) {
-	return dcrutil.DecodeWIF(wif, net)
-}
+//func DecodeWIF(wif string, net [2]byte) (*dcrutil.WIF, error) {
+//	return dcrutil.DecodeWIF(wif, net)
+//}
