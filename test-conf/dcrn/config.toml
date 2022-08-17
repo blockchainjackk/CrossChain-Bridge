@@ -114,8 +114,8 @@ IgnoreCheckAddressMixedCase = false
 
 # source blockchain gateway config
 [SrcGateway]
-APIAddress = ["http://127.0.0.1:19557"]
-APIAddressExt = ["http://127.0.0.1:19557"]
+APIAddress = ["https://127.0.0.1:19556","https://127.0.0.1:19557"]
+APIAddressExt = ["https://127.0.0.1:19556","https://127.0.0.1:19557"]
 
 # dest chain config
 [DestChain]
@@ -225,3 +225,11 @@ PasswordFile = "/home/xxx/accounts/password1"
 
 # dcrm backend node (gdcrm node RPC address)
 RPCAddress = "http://127.0.0.1:2921"
+
+[DcrnConfig]
+DcrndPort  = 19556
+WalletPort = 19557
+DcrndRPCCertPath  = "C:\\Users\\eaststar\\AppData\\Local\\Dcrd\\rpc.cert"
+WalletRpcCertPath = "C:\\Users\\eaststar\\AppData\\Local\\Dcrwallet\\rpc.cert"
+Rpcuser = "root"
+Rpcpassword = "root"

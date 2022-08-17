@@ -51,6 +51,7 @@ type BridgeConfig struct {
 	BtcExtra    *tokens.BtcExtraConfig `toml:",omitempty" json:",omitempty"`
 	Extra       *ExtraConfig           `toml:",omitempty" json:",omitempty"`
 	Dcrm        *DcrmConfig            `toml:",omitempty" json:",omitempty"`
+	DcrnConfig  *DcrnConfig            `toml:",omitempty" json:",omitempty"`
 }
 
 // ServerConfig swap server config
@@ -306,4 +307,15 @@ func SetDataDir(dir string) {
 // GetDataDir get data dir
 func GetDataDir() string {
 	return locDataDir
+}
+
+type DcrnConfig struct {
+	DcrndPort  int
+	WalletPort int
+
+	Rpcuser     string
+	Rpcpassword string
+
+	DcrndRpcCertPath  string
+	WalletRpcCertPath string
 }
