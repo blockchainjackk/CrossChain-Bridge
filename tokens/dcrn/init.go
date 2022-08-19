@@ -6,8 +6,8 @@ import (
 )
 
 var (
-	cfgMinRelayFee       int64 = 400
-	cfgMinRelayFeePerKb  int64 = 2000
+	cfgMinRelayFee       int64 = 10000
+	cfgMinRelayFeePerKb  int64 = 10000
 	cfgMaxRelayFeePerKb  int64 = 500000
 	cfgPlusFeePercentage uint64
 	cfgEstimateFeeBlocks = 6

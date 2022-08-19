@@ -245,9 +245,9 @@ func PostSwapinDcrnHandler(w http.ResponseWriter, r *http.Request) {
 		writeResponse(w, nil, err)
 	}
 	from := reqdata.FromAddress
-	txid := reqdata.TxHash
-	bind := reqdata.BindAddress
-	signMessage := reqdata.SignMessage
+	txid := reqdata.TxID
+	bind := reqdata.ToAddress
+	signMessage := reqdata.SignMsg
 	res, err := swapapi.SwapinDcrn(&from, &txid, &bind, &signMessage)
 	writeResponse(w, res, err)
 }

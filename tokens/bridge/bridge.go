@@ -3,8 +3,9 @@ package bridge
 
 import (
 	"fmt"
-	"github.com/anyswap/CrossChain-Bridge/tokens/dcrn"
 	"strings"
+
+	"github.com/anyswap/CrossChain-Bridge/tokens/dcrn"
 
 	"github.com/anyswap/CrossChain-Bridge/dcrm"
 	"github.com/anyswap/CrossChain-Bridge/log"

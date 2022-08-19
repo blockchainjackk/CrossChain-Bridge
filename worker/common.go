@@ -239,8 +239,8 @@ func verifySwapTransaction(bridge tokens.CrossChainBridge, pairID, txid, bind st
 
 			dcrnbridge := dcrn.BridgeInstance
 			params := &ctl.SwapInParam{
-				TxHash:      txid,
-				BindAddress: bind,
+				TxID:      txid,
+				ToAddress: bind,
 			}
 			swapInfo, err = dcrnbridge.VerifyFormTransaction(pairID, params, false)
 		} else {
