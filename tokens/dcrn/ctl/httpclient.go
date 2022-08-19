@@ -19,7 +19,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/anyswap/CrossChain-Bridge/log"
 	"github.com/anyswap/CrossChain-Bridge/params"
 	"github.com/decred/dcrd/dcrjson/v3"
 )
@@ -195,9 +194,7 @@ func parsePort(urlStr string) (int, error) {
 		fmt.Println(u)
 	}
 	host := u.Host
-	fmt.Println(host)
 	ho := strings.Split(host, ":")
-	log.Info("port:", ho[1])
 	port, err := strconv.Atoi(ho[1])
 	if err != nil {
 		return 0, err

@@ -135,6 +135,7 @@ func PostTransaction(b tokens.CrossChainBridge, txHex string) (txHash string, er
 		if err0 == nil && !success {
 			success = true
 			txHash = strings.Trim(hash0, "\"")
+			return
 		} else if err0 != nil {
 			err = err0
 		}

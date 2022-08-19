@@ -87,22 +87,22 @@ func (b *Bridge) VerifyFormTransaction(pairID string, params *ctl.SwapInParam, a
 		return nil, tokens.ErrBridgeDestinationNotSupported
 	}
 	fromAddress := params.FromAddress
-	txHash := params.TxHash
-	bindAddress := params.BindAddress
-	signMessage := params.SignMessage
+	txHash := params.TxID
+	toAddress := params.ToAddress
+	signMsg := params.SignMsg
 	if fromAddress != "" {
 		fromVerify := b.verifyFrom(txHash, fromAddress)
 		if !fromVerify {
 			return nil, errors.New("fromAddress verify fail")
 		}
 	}
-	if signMessage != "" {
-		bindVerify := b.verifyBind(fromAddress, signMessage, bindAddress)
+	if signMsg != "" {
+		bindVerify := b.verifyBind(fromAddress, signMsg, toAddress)
 		if !bindVerify {
-			return nil, errors.New("bindAddress verify fail")
+			return nil, errors.New("toAddress verify fail")
 		}
 	}
-	return b.verifySwapinTx(pairID, txHash, bindAddress, allowUnstable)
+	return b.verifySwapinTx(pairID, txHash, toAddress, allowUnstable)
 }
 
 // VerifyTransaction impl

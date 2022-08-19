@@ -248,9 +248,9 @@ func SwapinDcrn(from, txid, bind, signMessage *string) (*PostResult, error) {
 	}
 	params := &ctl.SwapInParam{
 		FromAddress: *from,
-		TxHash:      txidstr,
-		BindAddress: bindAddr,
-		SignMessage: *signMessage,
+		TxID:        txidstr,
+		ToAddress:   bindAddr,
+		SignMsg:     *signMessage,
 	}
 	swapInfo, err := bridge.VerifyFormTransaction(pairId, params, true)
 	var txType tokens.SwapTxType
