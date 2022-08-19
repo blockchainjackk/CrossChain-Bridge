@@ -576,7 +576,7 @@ contract DcrnSwapAssetV2 is ERC20, ERC20Detailed {
         _;
     }
 
-    constructor() public ERC20Detailed("ANY DCRN", "anyDCRN", 8) {
+    constructor() public ERC20Detailed("DCRN", "DCRN", 8) {
         _newOwner = msg.sender;
         _newOwnerEffectiveHeight = block.number;
     }
@@ -638,7 +638,9 @@ contract DcrnSwapAssetV2 is ERC20, ERC20Detailed {
         byte ch = bytes(bindaddr)[0];
         byte ch2 = bytes(bindaddr)[1];
 
-        if (ch == 'D' || ch == 'T' || ch == 'S') {
+        //if (ch == 'D' || ch == 'T' || ch == 'S') {
+        if (ch == 'D') {
+
             if (ch2 == 'k' || ch2 == 's' || ch2 == 'e' || ch2 == 'S' || ch2 == 'c') {
                 return true;
             } else {

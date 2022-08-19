@@ -74,7 +74,7 @@ SwapFeeRate = 0.001
 # maximum withdraw fee, if calced withdraw fee is larger than this fee, then use this value as withdraw fee
 MaximumSwapFee = 0.01
 # minimum withdraw fee, if calced withdraw fee is smaller than this fee, then use this value as withdraw fee
-MinimumSwapFee = 0.2
+MinimumSwapFee = 0.00001
 # plus this percentage of gas price to make tx more easier to be mined in dest chain
 # corresponding to send mapping token on dest chain (eg. mBTC) for depositing
 PlusGasPricePercentage = 1 # plus 1% gas price
