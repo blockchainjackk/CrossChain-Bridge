@@ -30,6 +30,10 @@ func writeResponse(w http.ResponseWriter, resp interface{}, err error) {
 func writeJSONResponse(w http.ResponseWriter, jsonData []byte) {
 	// Note: must set header before write header
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET,POST")
+	w.Header().Set("Access-Control-Expose-Headers", "Content-Disposition")
 	w.WriteHeader(http.StatusOK)
 	_, err := w.Write(jsonData)
 	if err != nil {
@@ -40,6 +44,10 @@ func writeJSONResponse(w http.ResponseWriter, jsonData []byte) {
 func writeErrResponse(w http.ResponseWriter, err error) {
 	// Note: must set header before write header
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET,POST")
+	w.Header().Set("Access-Control-Expose-Headers", "Content-Disposition")
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, err.Error())
 }
