@@ -27,7 +27,7 @@ MinimumSwap = 0.5
 # calced deposit fee = deposit value * this rate (when in [min, max] deposit fee range)
 SwapFeeRate = 0.001
 # maximum deposit fee, if calced deposit fee is larger than this fee, then use this value as deposit fee
-MaximumSwapFee = 50
+MaximumSwapFee = 50.0
 # minimum deposit fee, if calced deposit fee is smaller than this fee, then use this value as deposit fee
 MinimumSwapFee = 0.0001
 # plus this percentage of gas price to make tx more easier to be mined in source chain
@@ -72,7 +72,7 @@ MinimumSwap = 0.5
 # calced withdraw fee = withdraw value * this rate (when in [min, max] withdraw fee range)
 SwapFeeRate = 0.001
 # maximum withdraw fee, if calced withdraw fee is larger than this fee, then use this value as withdraw fee
-MaximumSwapFee = 50
+MaximumSwapFee = 50.0
 # minimum withdraw fee, if calced withdraw fee is smaller than this fee, then use this value as withdraw fee
 MinimumSwapFee = 0.0001
 # plus this percentage of gas price to make tx more easier to be mined in dest chain

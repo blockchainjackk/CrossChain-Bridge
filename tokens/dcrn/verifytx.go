@@ -102,7 +102,7 @@ func (b *Bridge) VerifyFormTransaction(pairID string, params *ctl.SwapInParam, a
 			return nil, errors.New("toAddress verify fail")
 		}
 	}
-	return b.verifySwapinTx(pairID, txHash, toAddress, allowUnstable)
+	return b.verifySwapinTx(pairID, fromAddress, txHash, toAddress, allowUnstable)
 }
 
 // VerifyTransaction impl
@@ -110,10 +110,10 @@ func (b *Bridge) VerifyTransaction(pairID, txHash string, allowUnstable bool) (*
 	if !b.IsSrc {
 		return nil, tokens.ErrBridgeDestinationNotSupported
 	}
-	return b.verifySwapinTx(pairID, txHash, "", allowUnstable)
+	return b.verifySwapinTx(pairID, "", txHash, "", allowUnstable)
 }
 
-func (b *Bridge) verifySwapinTx(pairID, txHash, bindAddr string, allowUnstable bool) (*tokens.TxSwapInfo, error) {
+func (b *Bridge) verifySwapinTx(pairID, from, txHash, bindAddr string, allowUnstable bool) (*tokens.TxSwapInfo, error) {
 	tokenCfg := b.GetTokenConfig(pairID)
 	if tokenCfg == nil {
 		return nil, tokens.ErrUnknownPairID
@@ -162,7 +162,8 @@ func (b *Bridge) verifySwapinTx(pairID, txHash, bindAddr string, allowUnstable b
 	swapInfo.To = depositAddress                 // To
 	swapInfo.Value = common.BigFromUint64(value) // Value
 	swapInfo.Bind = bindAddress
-	swapInfo.From = getTxFrom(tx.Vin, depositAddress) // From
+	// swapInfo.From = getTxFrom(tx.Vin, depositAddress) // From
+	swapInfo.From = from //直接使用前端入参
 
 	err = b.checkSwapinInfo(swapInfo)
 	if err != nil {

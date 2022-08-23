@@ -12,6 +12,7 @@ var (
 		"mainnet":     big.NewInt(1),
 		"rinkeby":     big.NewInt(4),
 		"goerli":      big.NewInt(5),
+		"bsc":         big.NewInt(56),
 		"rinkeby-bsc": big.NewInt(97),
 	}
 
