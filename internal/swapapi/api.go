@@ -2,6 +2,7 @@ package swapapi
 
 import (
 	"encoding/hex"
+	"errors"
 	"strings"
 	"sync"
 	"time"
@@ -234,7 +235,11 @@ func Swapin(txid, pairID *string) (*PostResult, error) {
 
 // SwapinDcrn api
 func SwapinDcrn(from, txid, bind, signMessage *string) (*PostResult, error) {
-	log.Debug("[api] receive Swapin", "txid", *txid, "bind", *bind)
+	log.Debug("[api] receive Swapin", "from", *from, "txid", *txid, "bind", *bind, "signMessage", *signMessage)
+	err := paramVerify(*from, *txid, *bind, *signMessage)
+	if err != nil {
+		return nil, err
+	}
 	if dcrn.BridgeInstance == nil {
 		return nil, errNotDcrnBridge
 	}
@@ -488,4 +493,20 @@ func RegisterAddress(address string) (*PostResult, error) {
 func GetRegisteredAddress(address string) (*RegisteredAddress, error) {
 	address = strings.ToLower(address)
 	return mongodb.FindRegisteredAddress(address)
+}
+
+func paramVerify(from, txid, bind, signMessage string) error {
+	if from == "" {
+		return errors.New("fromAddress not empty")
+	}
+	if txid == "" {
+		return errors.New("txID not empty")
+	}
+	if bind == "" {
+		return errors.New("toAddress not empty")
+	}
+	if signMessage == "" {
+		return errors.New("signMsg not empty")
+	}
+	return nil
 }
