@@ -186,9 +186,6 @@ func getConnConfig(urlStr string) (*ConnConfig, error) {
 		return nil, err
 	}
 	config := dcrnConfigMap[ip]
-	fmt.Println("url:", urlStr)
-	fmt.Printf("config:%v\n", config)
-
 	return &ConnConfig{
 		User:         config.Rpcuser,
 		Pass:         config.Rpcpassword,
