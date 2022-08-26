@@ -2,8 +2,10 @@ package ctl
 
 import (
 	"encoding/json"
-	"github.com/decred/dcrd/dcrjson/v3"
 	"time"
+
+	"github.com/anyswap/CrossChain-Bridge/log"
+	"github.com/decred/dcrd/dcrjson/v3"
 )
 
 const rpcVersion = "1.0"
@@ -21,8 +23,10 @@ func CallGet(result interface{}, url, method string, params ...interface{}) erro
 	}
 	rsp, err := rpcCallByUrl(url, marshalledJSON)
 	if err != nil {
+		log.Warn("rpc err", "url", url, "method", method, "err", err)
 		return err
 	}
+	log.Info("rpc success", "url", url, "method", method, "result", string(rsp))
 	err = json.Unmarshal(rsp, &result)
 	if err != nil {
 		return err

@@ -97,7 +97,6 @@ func rpcCallByUrl(urlStr string, marshalledJSON []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	// Configure basic access authorization.
 	httpRequest.SetBasicAuth(connConfig.User, connConfig.Pass)
 
@@ -187,6 +186,9 @@ func getConnConfig(urlStr string) (*ConnConfig, error) {
 		return nil, err
 	}
 	config := dcrnConfigMap[ip]
+	fmt.Println("url:", urlStr)
+	fmt.Printf("config:%v\n", config)
+
 	return &ConnConfig{
 		User:         config.Rpcuser,
 		Pass:         config.Rpcpassword,
