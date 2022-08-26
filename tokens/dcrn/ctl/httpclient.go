@@ -24,16 +24,20 @@ import (
 )
 
 var (
-	dcrnConfig  *params.DcrnConfig
-	rpcuser     string
-	rpcpassword string
+	dcrnConfigs   []*params.DcrnConfig
+	dcrnConfigMap map[string]*params.DcrnConfig
 )
 
 func initArgs() {
-	cfg := params.GetConfig()
-	dcrnConfig = cfg.DcrnConfig
-	rpcuser = dcrnConfig.Rpcuser
-	rpcpassword = dcrnConfig.Rpcpassword
+	if dcrnConfigMap == nil {
+		cfg := params.GetConfig()
+		dcrnConfigs = cfg.DcrnConfigs
+		dcrnConfigMap = make(map[string]*params.DcrnConfig)
+		for _, dcrnConfig := range dcrnConfigs {
+			dcrnConfigMap[dcrnConfig.IP] = dcrnConfig
+		}
+	}
+
 }
 
 // notls方式
@@ -87,15 +91,16 @@ func rpcCallByUrl(urlStr string, marshalledJSON []byte) ([]byte, error) {
 	httpRequest.Close = true
 	httpRequest.Header.Set("Content-Type", "application/json")
 
-	// Configure basic access authorization.
-	httpRequest.SetBasicAuth(rpcuser, rpcpassword)
-
 	// Create the new HTTP client that is configured according to the user-
 	// specified options and submit the request.
 	connConfig, err := getConnConfig(urlStr)
 	if err != nil {
 		return nil, err
 	}
+
+	// Configure basic access authorization.
+	httpRequest.SetBasicAuth(connConfig.User, connConfig.Pass)
+
 	// httpClient, err := newHTTPClient()
 	httpClient, err := newHTTPClient2(connConfig)
 	if err != nil {
@@ -169,11 +174,11 @@ type ConnConfig struct {
 }
 
 func getConnConfig(urlStr string) (*ConnConfig, error) {
-	port, err := parsePort(urlStr)
+	ip, port, err := parseIPAndPort(urlStr)
 	if err != nil {
 		return nil, err
 	}
-	path, err := getCertPathByPort(port)
+	path, err := getCertPathByPort(ip, port)
 	if err != nil {
 		return nil, err
 	}
@@ -181,29 +186,37 @@ func getConnConfig(urlStr string) (*ConnConfig, error) {
 	if err != nil {
 		return nil, err
 	}
+	config := dcrnConfigMap[ip]
 	return &ConnConfig{
+		User:         config.Rpcuser,
+		Pass:         config.Rpcpassword,
 		DisableTLS:   false,
 		Certificates: serverCert,
 	}, nil
 }
 
-// 通过url获取端口号
-func parsePort(urlStr string) (int, error) {
+// 通过url获取IP与端口号
+func parseIPAndPort(urlStr string) (string, int, error) {
 	u, err := url.Parse(urlStr)
-	if err == nil {
-		fmt.Println(u)
+	if err != nil {
+		return "", 0, err
 	}
 	host := u.Host
 	ho := strings.Split(host, ":")
+	ip := ho[0]
 	port, err := strconv.Atoi(ho[1])
 	if err != nil {
-		return 0, err
+		return "", 0, err
 	}
-	return port, nil
+	return ip, port, nil
 }
 
 // 通过端口号确认证书路径
-func getCertPathByPort(port int) (string, error) {
+func getCertPathByPort(ip string, port int) (string, error) {
+	dcrnConfig := dcrnConfigMap[ip]
+	if dcrnConfig == nil {
+		return "", errors.New("ip:" + ip + "no config")
+	}
 	var path string
 	switch port {
 	case 9109: //mainnet
