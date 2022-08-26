@@ -565,18 +565,26 @@ contract DcrnSwapAssetV2 is ERC20, ERC20Detailed {
     event LogChangeOwner(address indexed oldOwner, address indexed newOwner, uint indexed effectiveHeight);
     event LogSwapin(bytes32 indexed txhash, address indexed account, uint amount);
     event LogSwapout(address indexed account, uint amount, string bindaddr);
+    event LogChangeMinSwapOutValue(uint256 indexed amount);
+    event LogChangeMaxSwapOutValue(uint256 indexed amount);
+
+
 
     address private _oldOwner;
     address private _newOwner;
     uint256 private _newOwnerEffectiveHeight;
     bool private _initialized = false;
+    uint256 private _minSwapOutValue;
+    uint256 private _maxSwapOutValue;
 
     modifier onlyOwner() {
         require(msg.sender == owner(), "only owner");
         _;
     }
 
-    constructor() public ERC20Detailed("DCRN", "DCRN", 8) {
+    constructor(uint256 minSwapOutValue,uint256 maxSwapOutValue) public ERC20Detailed("Decred-Next", "DCRN", 8) {
+        _minSwapOutValue = minSwapOutValue;
+        _maxSwapOutValue = maxSwapOutValue;
         _newOwner = msg.sender;
         _newOwnerEffectiveHeight = block.number;
     }
@@ -586,6 +594,14 @@ contract DcrnSwapAssetV2 is ERC20, ERC20Detailed {
             return _newOwner;
         }
         return _oldOwner;
+    }
+    function minSwapOutValue() public view returns (uint256) {
+
+        return _minSwapOutValue;
+    }
+   function maxSwapOutValue() public view returns (uint256) {
+
+        return _maxSwapOutValue;
     }
 
     function initialized() public view returns (bool) {
@@ -611,6 +627,20 @@ contract DcrnSwapAssetV2 is ERC20, ERC20Detailed {
         emit LogChangeOwner(_oldOwner, _newOwner, _newOwnerEffectiveHeight);
         return true;
     }
+    function changeMinSwapOutValue(uint256 amount) public onlyOwner returns (bool) {
+
+        _minSwapOutValue=amount;
+        emit LogChangeMinSwapOutValue(amount);
+        return true;
+    }
+    function changeMaxSwapOutValue(uint256 amount) public onlyOwner returns (bool) {
+
+        _maxSwapOutValue=amount;
+        emit LogChangeMaxSwapOutValue(amount);
+        return true;
+    }
+
+
 
     function Swapin(bytes32 txhash, address account, uint256 amount) public onlyOwner returns (bool) {
         _mint(account, amount);
@@ -619,16 +649,24 @@ contract DcrnSwapAssetV2 is ERC20, ERC20Detailed {
     }
 
     function Swapout(uint256 amount, string memory bindaddr) public returns (bool) {
+        require(amount >= _minSwapOutValue,"swap amount too low");
+        require(amount <= _maxSwapOutValue,"swap amount too high");
+
         verifyBindAddr(bindaddr);
         _burn(_msgSender(), amount);
         emit LogSwapout(_msgSender(), amount, bindaddr);
         return true;
     }
 
-  function Mint(address account, uint256 amount) public onlyOwner returns (bool) {
+    function Mint(address account, uint256 amount) public onlyOwner returns (bool) {
         _mint(account, amount);
         return true;
     }
+    function Burn(address account, uint256 amount) public onlyOwner returns (bool) {
+        _burn(account, amount);
+        return true;
+    }
+
 
 
     function verifyBindAddr(string memory bindaddr) pure public returns (bool){

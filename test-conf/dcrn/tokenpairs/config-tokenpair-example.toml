@@ -12,12 +12,12 @@ Description = "DCRN Coin"
 # if ID is ERC20, this is the erc20 token's contract address
 ContractAddress = ""
 # deposit to this address to make swap
-DepositAddress = "SsWzo3muBogW2aipZsJyKkPqdPyxmBWLzjn"
-# account4 as dcrm
-DcrmAddressPriKey = "PsUR4C4jopKuKy64WYiFE31KQPLPp5chkCDUJDeWuxFpLtLjZgAfG"
+DepositAddress = "SsVe4qoQCqpXBVSTFV7uPVZXqEo8NSqjyXh"
+# dcrm
+DcrmAddressPriKey = "PsUQPn498jvZCXboqxdXD8MjQqQunWCiiHywt3XrNR3A7FzsDpwof"
 
 # withdraw from this address
-DcrmAddress = "SsWzo3muBogW2aipZsJyKkPqdPyxmBWLzjn"
+DcrmAddress = "SsVe4qoQCqpXBVSTFV7uPVZXqEo8NSqjyXh"
 # dcrm address public key
 DcrmPubkey = ""
 # maximum deposit value
@@ -29,7 +29,7 @@ SwapFeeRate = 0.001
 # maximum deposit fee, if calced deposit fee is larger than this fee, then use this value as deposit fee
 MaximumSwapFee = 50.0
 # minimum deposit fee, if calced deposit fee is smaller than this fee, then use this value as deposit fee
-MinimumSwapFee = 0.0001
+MinimumSwapFee = 0.05
 # plus this percentage of gas price to make tx more easier to be mined in source chain
 # corresponding to send asset on source chain (eg. BTC) for withdrawing
 PlusGasPricePercentage = 15 # plus 15% gas price
@@ -59,6 +59,7 @@ Description = "cross chain bridge DCRN with anyBTC"
 ContractAddress = "0x19DfB8E5E126075C5C2c04c7308d80E6A3bC4de8"
 
 # mapping erc20 token creator
+#account4
 DcrmAddress = "0x040C22254EE46d612978496283d2565e39b817e0"
 # mutichain1 priky  as DCRM
 DcrmAddressPriKey = "47f909f570c10408b254ca6c11f0935fb65e0f2379e752ddfccd9a475691e43e"
@@ -68,13 +69,13 @@ DcrmPubkey = "04c1d78f946714f3573bf9f3596a9f8e2bc6f423ea1f37fede76e2da914134e3e6
 # maximum withdraw value
 MaximumSwap = 1000000.0
 # minimum withdraw value
-MinimumSwap = 0.5
+MinimumSwap = 0.2
 # calced withdraw fee = withdraw value * this rate (when in [min, max] withdraw fee range)
 SwapFeeRate = 0.001
 # maximum withdraw fee, if calced withdraw fee is larger than this fee, then use this value as withdraw fee
 MaximumSwapFee = 50.0
 # minimum withdraw fee, if calced withdraw fee is smaller than this fee, then use this value as withdraw fee
-MinimumSwapFee = 0.0001
+MinimumSwapFee = 0.05
 # plus this percentage of gas price to make tx more easier to be mined in dest chain
 # corresponding to send mapping token on dest chain (eg. mBTC) for depositing
 PlusGasPricePercentage = 1 # plus 1% gas price
