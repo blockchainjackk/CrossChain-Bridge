@@ -36,7 +36,7 @@ func (b *Bridge) BuildAggregateTransaction(relayFeePerKb int64, addrs []string, 
 		script:  script,
 	}
 
-	return b.NewUnsignedTransaction(txOuts, dcrnAmountType(relayFeePerKb), inputSource, changeSource, true)
+	return b.NewUnsignedTransaction(txOuts, dcrnAmountType(relayFeePerKb), inputSource, changeSource, true, "")
 }
 
 func (b *Bridge) rebuildAggregateTransaction(extra *tokens.BtcExtraArgs) (rawTx *txauthor.AuthoredTx, err error) {

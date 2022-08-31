@@ -105,9 +105,9 @@ func (b *Bridge) NewTxIn(txid string, vout uint32, value int64, pkScript []byte)
 	if err != nil {
 		return nil, err
 	}
-	//todo dcrn多一个tree参数
+	//todo tree参数
 	prevOutPoint := wire.NewOutPoint(txHash, vout, 0)
-	//todo 参数不一样 多一个value
+
 	return wire.NewTxIn(prevOutPoint, value, pkScript), nil
 }
 

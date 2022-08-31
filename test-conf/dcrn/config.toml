@@ -226,10 +226,11 @@ PasswordFile = "/home/xxx/accounts/password1"
 # dcrm backend node (gdcrm node RPC address)
 RPCAddress = "http://127.0.0.1:2921"
 
-[DcrnConfig]
+[[DcrnConfigs]]
+IP = "127.0.0.1"
 DcrndPort  = 19556
 WalletPort = 19557
-DcrndRPCCertPath  = "C:\\Users\\eaststar\\AppData\\Local\\Dcrd\\rpc.cert"
-WalletRpcCertPath = "C:\\Users\\eaststar\\AppData\\Local\\Dcrwallet\\rpc.cert"
+DcrndRPCCertPath  = "/Users/boom/Library/Application Support/Dcrd/rpc.cert"
+WalletRpcCertPath = "/Users/boom/Library/Application Support/Dcrwallet/rpc.cert"
 Rpcuser = "root"
 Rpcpassword = "root"

@@ -214,7 +214,7 @@ func parseIPAndPort(urlStr string) (string, int, error) {
 func getCertPathByPort(ip string, port int) (string, error) {
 	dcrnConfig := dcrnConfigMap[ip]
 	if dcrnConfig == nil {
-		return "", errors.New("ip:" + ip + "no config")
+		return "", errors.New("ip:" + ip + " no config")
 	}
 	var path string
 	switch port {

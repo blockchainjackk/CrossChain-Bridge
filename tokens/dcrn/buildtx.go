@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"math/big"
+	"strings"
 	"time"
 
 	"decred.org/dcrwallet/wallet/txauthor"
@@ -148,8 +149,11 @@ func (b *Bridge) BuildRawTransaction(args *tokens.BuildTxArgs) (rawTx interface{
 	}
 
 	var inputSource txauthor.InputSource
+
 	inputSource = func(target dcrutil.Amount) (detail *txauthor.InputDetail, err error) {
+
 		if len(extra.PreviousOutPoints) != 0 {
+			//todo
 			return b.getUtxos(from, target, extra.PreviousOutPoints)
 		}
 		return b.selectUtxos(from, target)
@@ -164,7 +168,7 @@ func (b *Bridge) BuildRawTransaction(args *tokens.BuildTxArgs) (rawTx interface{
 		script:  script,
 	}
 
-	authoredTx, err := b.NewUnsignedTransaction(txOuts, relayFeePerKb, inputSource, changeSource, false)
+	authoredTx, err := b.NewUnsignedTransaction(txOuts, relayFeePerKb, inputSource, changeSource, false, from)
 	if err != nil {
 		return nil, err
 	}
@@ -216,6 +220,7 @@ func (b *Bridge) addMemoOutput(txOuts *[]*wireTxOutType, memo string) error {
 	if err != nil {
 		return err
 	}
+
 	*txOuts = append(*txOuts, b.NewTxOut(0, nullScript))
 	return nil
 }
@@ -253,7 +258,8 @@ func (b *Bridge) getOutspendWithRetry(point *tokens.BtcOutPoint) (outspend *elec
 }
 
 func (b *Bridge) selectUtxos(from string, target dcrnAmountType) (detail *txauthor.InputDetail, err error) {
-	p2pkhScript, _, err := b.GetPayToAddrScript(from)
+
+	pkScript, _, err := b.GetPayToAddrScript(from)
 	if err != nil {
 		return nil, err
 	}
@@ -271,6 +277,7 @@ func (b *Bridge) selectUtxos(from string, target dcrnAmountType) (detail *txauth
 
 	inputs := make([]*wire.TxIn, 0)
 	scripts := make([][]byte, 0)
+	redeemScriptSizes := make([]int, 0)
 	detail = &txauthor.InputDetail{}
 	for _, utxo := range utxos {
 		value := dcrnAmountType(*utxo.Value)
@@ -285,22 +292,33 @@ func (b *Bridge) selectUtxos(from string, target dcrnAmountType) (detail *txauth
 			continue
 		}
 		output := tx.Vout[*utxo.Vout]
-		if *output.ScriptpubkeyType != p2pkhType {
+		//if *output.ScriptpubkeyType != p2pkhType && *output.ScriptpubkeyType != p2shType {
+		//	continue
+		//}
+		var scriptSize int
+
+		switch *output.ScriptpubkeyType {
+		case p2pkhType:
+			scriptSize = txsizes.RedeemP2PKHSigScriptSize
+		case p2shType:
+			scriptSize = txsizes.RedeemP2SHSigScriptSize
+		default:
 			continue
 		}
+
 		if output.ScriptpubkeyAddress == nil || *output.ScriptpubkeyAddress != from {
 			continue
 		}
 
-		txIn, errf := b.NewTxIn(*utxo.Txid, *utxo.Vout, int64(value), p2pkhScript)
+		txIn, errf := b.NewTxIn(*utxo.Txid, *utxo.Vout, int64(value), pkScript)
 		if errf != nil {
 			continue
 		}
 
 		total += value
 		inputs = append(inputs, txIn)
-		scripts = append(scripts, p2pkhScript)
-
+		scripts = append(scripts, pkScript)
+		redeemScriptSizes = append(redeemScriptSizes, scriptSize)
 		if total >= target {
 			success = true
 			break
@@ -309,8 +327,9 @@ func (b *Bridge) selectUtxos(from string, target dcrnAmountType) (detail *txauth
 	detail.Amount = total
 	detail.Inputs = inputs
 	detail.Scripts = scripts
+	detail.RedeemScriptSizes = redeemScriptSizes
 	if !success {
-		err = fmt.Errorf("not enough balance, total %v < target %v", total, target)
+		err = fmt.Errorf("%v not enough balance, total %v < target %v", from, total, target)
 		return nil, err
 	}
 
@@ -403,12 +422,25 @@ func sumOutputValues(outputs []*wire.TxOut) (totalOutput dcrutil.Amount) {
 // ref. https://github.com/btcsuite/btcwallet/blob/b07494fc2d662fdda2b8a9db2a3eacde3e1ef347/wallet/txauthor/author.go
 // we only modify it to support P2PKH change script (the origin only support P2WPKH change script)
 // and update estimate size because we are not use P2WKH
-func (b *Bridge) NewUnsignedTransaction(outputs []*wireTxOutType, relayFeePerKb dcrnAmountType, fetchInputs txauthor.InputSource, fetchChange txauthor.ChangeSource, isAggregate bool) (*txauthor.AuthoredTx, error) {
+func (b *Bridge) NewUnsignedTransaction(outputs []*wireTxOutType, relayFeePerKb dcrnAmountType, fetchInputs txauthor.InputSource, fetchChange txauthor.ChangeSource, isAggregate bool, from string) (*txauthor.AuthoredTx, error) {
 
-	//const op errors.Op = "txauthor.NewUnsignedTransaction"
+	var scriptSizes []int
+
+	//目前的deposit地址只支持P2PKH或者P2SH
+	if !isAggregate {
+		c := strings.ToUpper(string(from[1]))
+		if c == "C" {
+			scriptSizes = []int{txsizes.RedeemP2SHSigScriptSize}
+		} else {
+			scriptSizes = []int{txsizes.RedeemP2PKHSigScriptSize}
+		}
+	} else {
+		//todo
+		scriptSizes = []int{txsizes.RedeemP2PKHSigScriptSize}
+	}
 
 	targetAmount := sumOutputValues(outputs)
-	scriptSizes := []int{txsizes.RedeemP2PKHSigScriptSize}
+
 	changeScript, changeScriptVersion, err := fetchChange.Script()
 	if err != nil {
 		return nil, err
@@ -430,7 +462,7 @@ func (b *Bridge) NewUnsignedTransaction(outputs []*wireTxOutType, relayFeePerKb 
 
 		scriptSizes := make([]int, 0, len(inputDetail.RedeemScriptSizes))
 		scriptSizes = append(scriptSizes, inputDetail.RedeemScriptSizes...)
-
+		//todo
 		maxSignedSize = txsizes.EstimateSerializeSize(scriptSizes, outputs, changeScriptSize)
 		maxRequiredFee := txrules.FeeForSerializeSize(relayFeePerKb, maxSignedSize)
 
@@ -486,26 +518,3 @@ func (b *Bridge) NewUnsignedTransaction(outputs []*wireTxOutType, relayFeePerKb 
 		}, nil
 	}
 }
-
-//func (b *Bridge) estimateSize(scripts [][]byte, txOuts []*wireTxOutType, addChangeOutput, isAggregate bool) int {
-//	if !isAggregate {
-//		return txsizes.EstimateSerializeSize(len(scripts), txOuts, addChangeOutput)
-//	}
-//
-//	var p2sh, p2pkh int
-//	for _, pkScript := range scripts {
-//		switch {
-//		case b.IsPayToScriptHash(pkScript):
-//			p2sh++
-//		default:
-//			p2pkh++
-//		}
-//	}
-//
-//	size := txsizes.EstimateSerializeSize(p2pkh, txOuts, addChangeOutput)
-//	if p2sh > 0 {
-//		size += p2sh * redeemAggregateP2SHInputSize
-//	}
-//
-//	return size
-//}
