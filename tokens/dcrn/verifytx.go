@@ -143,7 +143,7 @@ func (b *Bridge) verifySwapinTx(pairID, from, txHash, bindAddr string, allowUnst
 		swapInfo.Timestamp = *txStatus.BlockTime // Timestamp
 	}
 	depositAddress := tokenCfg.DepositAddress
-	value, memoScript, rightReceiver := b.GetReceivedValue(tx.Vout, depositAddress, p2pkhType)
+	value, memoScript, rightReceiver := b.GetReceivedValue(tx.Vout, depositAddress, p2shType)
 	if !rightReceiver {
 		return swapInfo, tokens.ErrTxWithWrongReceiver
 	}
