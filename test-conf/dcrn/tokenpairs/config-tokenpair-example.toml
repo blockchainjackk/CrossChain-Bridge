@@ -23,7 +23,7 @@ DcrmPubkey = ""
 # maximum deposit value
 MaximumSwap = 1000000.0
 # minimum deposit value
-MinimumSwap = 0.5
+MinimumSwap = 0.2
 # calced deposit fee = deposit value * this rate (when in [min, max] deposit fee range)
 SwapFeeRate = 0.001
 # maximum deposit fee, if calced deposit fee is larger than this fee, then use this value as deposit fee
@@ -56,12 +56,11 @@ Decimals = 8
 Description = "cross chain bridge DCRN with anyBTC"
 # mapping erc20 token address
 #ContractAddress = "0x1eE6e5f1f818a8cE2668D76Fb6Bb205b8159126D"
-ContractAddress = "0x19DfB8E5E126075C5C2c04c7308d80E6A3bC4de8"
+ContractAddress = "0xc5D9da57549A143a52F98107A73eaf9108B1111c"
 
-# mapping erc20 token creator
-#account4
+# mapping erc20 token creator (account4)
 DcrmAddress = "0x040C22254EE46d612978496283d2565e39b817e0"
-# mutichain1 priky  as DCRM
+# priky  as DCRM
 DcrmAddressPriKey = "47f909f570c10408b254ca6c11f0935fb65e0f2379e752ddfccd9a475691e43e"
 
 # dcrm address public key

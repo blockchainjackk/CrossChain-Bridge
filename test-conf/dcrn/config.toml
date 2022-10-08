@@ -114,8 +114,8 @@ IgnoreCheckAddressMixedCase = false
 
 # source blockchain gateway config
 [SrcGateway]
-APIAddress = ["https://127.0.0.1:19556","https://127.0.0.1:19557"]
-APIAddressExt = ["https://127.0.0.1:19556","https://127.0.0.1:19557"]
+APIAddress = ["https://127.0.0.1:19557","https://127.0.0.1:19556"]
+APIAddressExt = ["https://127.0.0.1:19557","https://127.0.0.1:19556"]
 
 # dest chain config
 [DestChain]

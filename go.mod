@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	decred.org/dcrwallet v1.2.3-0.20200218145641-af2346539b3c
-	github.com/BurntSushi/toml v0.4.1
+	github.com/BurntSushi/toml v0.3.1
 	github.com/btcsuite/btcd v0.21.0-beta
 	github.com/btcsuite/btcutil v1.0.3-0.20201208143702-a53e38424cce
 	github.com/btcsuite/btcwallet/wallet/txauthor v1.0.0
@@ -44,6 +44,7 @@ require (
 	github.com/kr/pretty v0.3.0 // indirect
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.3 // indirect
+	github.com/lib/pq v1.10.3
 	github.com/ltcsuite/ltcd v0.20.1-beta
 	github.com/ltcsuite/ltcutil v1.0.2-beta
 	github.com/ltcsuite/ltcwallet/wallet/txauthor v1.0.0
@@ -67,5 +68,4 @@ require (
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-
 )

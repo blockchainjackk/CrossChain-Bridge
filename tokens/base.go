@@ -193,12 +193,16 @@ func CalcSwappedValue(pairID string, value *big.Int, isSrc bool, from, txto stri
 	token, cpToken := GetTokenConfigsByDirection(pairID, isSrc)
 	//和最小swap值做对比
 	if value.Cmp(token.minSwap) < 0 {
+		log.Warn("check swap value,swap value too small", "pairID", pairID, "value", value, "isSrc", isSrc,
+			"minSwap", token.minSwap)
 		return big.NewInt(0)
 	}
 	//是否在big白名单
 	isInBigValueWhitelist := token.IsInBigValueWhitelist(from) || token.IsInBigValueWhitelist(txto)
 	//和最大值对比
 	if !isInBigValueWhitelist && value.Cmp(token.maxSwap) > 0 {
+		log.Warn("check swap value,swap value too big", "pairID", pairID, "value", value, "isSrc", isSrc,
+			"minSwap", token.minSwap)
 		return big.NewInt(0)
 	}
 	//判断FeeRate是否为0.0

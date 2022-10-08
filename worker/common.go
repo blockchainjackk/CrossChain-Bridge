@@ -236,7 +236,6 @@ func verifySwapTransaction(bridge tokens.CrossChainBridge, pairID, txid, bind st
 
 		chain := bridge.GetChainConfig().BlockChain
 		if chain == "DCRN" {
-
 			dcrnbridge := dcrn.BridgeInstance
 			params := &ctl.SwapInParam{
 				TxID:      txid,

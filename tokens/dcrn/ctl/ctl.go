@@ -26,7 +26,7 @@ func CallGet(result interface{}, url, method string, params ...interface{}) erro
 		log.Warn("rpc err", "url", url, "method", method, "err", err)
 		return err
 	}
-	log.Info("rpc success", "url", url, "method", method, "result", string(rsp))
+	//log.Info("rpc success", "url", url, "method", method, "result", string(rsp))
 	err = json.Unmarshal(rsp, &result)
 	if err != nil {
 		return err

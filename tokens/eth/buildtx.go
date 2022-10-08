@@ -121,6 +121,7 @@ func (b *Bridge) buildTx(args *tokens.BuildTxArgs) (rawTx interface{}, err error
 	}
 
 	// swap need value = tx value + min reserve + 5 * gas fee
+	// NoSwapType : swap need value = tx value + gas fee
 	needValue := big.NewInt(0)
 	if value != nil && value.Sign() > 0 {
 		needValue.Add(needValue, value)

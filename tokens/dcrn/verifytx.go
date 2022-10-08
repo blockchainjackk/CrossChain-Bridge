@@ -178,9 +178,11 @@ func (b *Bridge) verifySwapinTx(pairID, from, txHash, bindAddr string, allowUnst
 
 func (b *Bridge) checkSwapinInfo(swapInfo *tokens.TxSwapInfo) error {
 	if swapInfo.From == swapInfo.To {
+		log.Error("wrong swap sender in swapin, from==to!")
 		return tokens.ErrTxWithWrongSender
 	}
 	if !tokens.CheckSwapValue(swapInfo, b.IsSrc) {
+		log.Error("wrong swap value in swapin")
 		return tokens.ErrTxWithWrongValue
 	}
 	if !tokens.DstBridge.IsValidAddress(swapInfo.Bind) {
