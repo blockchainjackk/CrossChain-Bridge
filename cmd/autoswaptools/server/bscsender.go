@@ -17,32 +17,35 @@ import (
 
 const (
 	RetrySendTxTime = 5
-	ABIPATH         = "./cmd/autoswaptools/server/contarct/token.abi"
 	SwapOutFunHash  = "ad54056d"
-	//todo  这些配置看怎么处理合适
-	//GasDistributeAddress = "0x040C22254EE46d612978496283d2565e39b817e0"
-	//GasDistributeKey     = "47f909f570c10408b254ca6c11f0935fb65e0f2379e752ddfccd9a475691e43e"
-	GasDistributeAddress      = "0x9ff2a4f6a478b435ADD643ee5e02b74e06D4f315"
-	GasDistributeKey          = "ee260de5beeff23260bc2d52b7ae34c8d0cc0468ffea80aed5f7c8a083016ed3"
-	DistributeSwapOutInterval = time.Second * 60
 )
 
 type BscSender struct {
-	bscBridge   *eth.Bridge
-	swapServer  string
-	account     string
-	db          *db.CrossChainDB
-	tokenConfig *tokens.TokenConfig
+	bscBridge                 *eth.Bridge
+	swapServer                string
+	account                   string
+	gasDistributeAddress      string
+	gasDistributeKey          string
+	distributeSwapOutInterval int64
+	scanBalanceInterval       int64
+	scanBalancePerTimeMill    int64
+	db                        *db.CrossChainDB
+	tokenConfig               *tokens.TokenConfig
 }
 
 func NewBscSender(conf *autoSwapConf) *BscSender {
 	bridge := newBscBridge(conf)
 	sender := &BscSender{
-		bscBridge:   bridge,
-		swapServer:  conf.SwapServer,
-		account:     conf.Account,
-		db:          conf.Db,
-		tokenConfig: conf.TokenPairConfig.DestToken,
+		bscBridge:                 bridge,
+		swapServer:                conf.SwapServer,
+		account:                   conf.Account,
+		db:                        conf.Db,
+		tokenConfig:               conf.TokenPairConfig.DestToken,
+		gasDistributeAddress:      conf.GasDistributeAddress,
+		gasDistributeKey:          conf.GasDistributeKey,
+		distributeSwapOutInterval: conf.DistributeSwapOutInterval,
+		scanBalanceInterval:       conf.ScanBalanceInterval,
+		scanBalancePerTimeMill:    conf.ScanBalancePerTimeMill,
 	}
 	return sender
 }
@@ -61,12 +64,6 @@ func newBscBridge(conf *autoSwapConf) *eth.Bridge {
 	return bridge
 }
 
-//给多个地址返送gas费用，
-//需要一个专门给地址打gas的服务，监听chan，给送过来的地址打钱，
-//在swapIn时，就给这个chan发一个地址
-
-//还需要一个计算具体打多少钱的功能
-// todo  gasChan 看哪里声明合适
 func (b *BscSender) DistributeGas(gasCh chan string, ctx context.Context) {
 
 	// todo panic
@@ -74,7 +71,7 @@ func (b *BscSender) DistributeGas(gasCh chan string, ctx context.Context) {
 		select {
 		case to := <-gasCh:
 			log.Infof("[DistributeGas] start send gas to %v\n", to)
-			err := b.sendGas2Address(GasDistributeAddress, GasDistributeKey, to)
+			err := b.sendGas2Address(b.gasDistributeAddress, b.gasDistributeKey, to)
 			if err != nil {
 				log.Errorf("[DistributeGas] distribute gas fail, from: %v , to: %v , err: %v\n", "", "", err)
 			}
@@ -86,11 +83,6 @@ func (b *BscSender) DistributeGas(gasCh chan string, ctx context.Context) {
 	}
 
 }
-
-//貌似还需要一个更新余额的服务
-//发送swapIn之后更新一下余额
-//发送swapOut之后更新一下余额
-//真正发送交易的时候获取获取一下链上余额和库中余额，做个校对，避免发送错误交易
 
 //给地址发送gas费用
 func (b *BscSender) sendGas2Address(from string, key string, to string) error {
@@ -133,8 +125,8 @@ func (b *BscSender) sendGas2Address(from string, key string, to string) error {
 	return nil
 }
 func (b *BscSender) calculateGas() (*big.Int, error) {
-	//DefaultGasLimit需要调整，这里暂时设置成 90000/3 =3000
-	limit := b.tokenConfig.DefaultGasLimit / 3
+	//DefaultGasLimit 60000
+	limit := b.tokenConfig.DefaultGasLimit
 	suggestPrice, err := b.bscBridge.SuggestPrice()
 	if err != nil {
 		log.Errorf("[calculateGas] get suggest gas price err %v ", err)
@@ -197,12 +189,13 @@ func (b *BscSender) DistributeSwapOut(ctx context.Context) {
 		fromInfo, binds, err := b.findAddrToSwapOut1()
 		if err != nil {
 			log.Errorf("[DistributeSwapOut] find addr to swap out err %v\n", err)
-			//todo return 是否合适
+			time.Sleep(time.Second * 10)
 			continue
 		}
+		log.Infof("[DistributeSwapOut] find  %v addr to distribute swap out.\n", len(fromInfo))
 		//signedTxs := make([]interface{}, 0)
 		for i, info := range fromInfo {
-			tx, _, err := b.buildSignedSwapOutTx(info.Address, binds[i], info.Key)
+			tx, _, err := b.buildSignedSwapOutTx(info.Address, binds[i], info.Key, info.Balance)
 			if err != nil {
 				log.Errorf("[DistributeSwapOut] build signed swapOut tx err %v \n", err)
 				continue
@@ -217,9 +210,10 @@ func (b *BscSender) DistributeSwapOut(ctx context.Context) {
 					from: info.Address,
 					bind: binds[i],
 				}
+				log.Infof("[DistributeSwapOut] distribute swap out from : %v, bind : %v.\n", swapInfo.from, swapInfo.bind)
 				SwapOutTxCh <- swapInfo
 			}
-			time.Sleep(DistributeSwapOutInterval)
+			time.Sleep(time.Second * time.Duration(b.distributeSwapOutInterval))
 		}
 	}
 }
@@ -239,7 +233,7 @@ func (b *BscSender) SwapOutTxProcessor(ctx context.Context, SwapOutTxCh, isClose
 			tx1, _ := info.tx.(*types2.Transaction)
 			log.Infof("[SwapOutTxProcessor] recive  %v to send!\n", tx1.Hash().String())
 			_ = b.sendAndSaveSwapOutTx(info)
-			return nil
+			continue
 		}
 	}
 
@@ -282,19 +276,29 @@ func (b *BscSender) sendAndSaveSwapOutTx(swapOutInfo *SwapOutInfo) error {
 	return nil
 }
 
-func (b *BscSender) buildSwapOutTxInput(bind string) []byte {
+func (b *BscSender) buildSwapOutTxInput(bind string, balance int64) []byte {
 
-	value := b.tokenConfig.MinimumSwap
-	swapValueBig := tokens.ToBits(*value, *b.tokenConfig.Decimals)
+	//MinimumSwap := b.tokenConfig.MinimumSwap
 	funcHash, _ := hex.DecodeString(SwapOutFunHash)
-	input := abicoder.PackDataWithFuncHash(funcHash, swapValueBig, bind)
+
+	//var value float64
+	//_, v := RandomNormalInt64(1, 10, 2, 1)
+	//balanceD := toDcrnCoin(balance)
+	//if float64(v)-balanceD > *MinimumSwap {
+	//	value = float64(v)
+	//} else {
+	//	value = balanceD
+	//}
+	//swapValueBig := tokens.ToBits(value, *b.tokenConfig.Decimals)
+
+	input := abicoder.PackDataWithFuncHash(funcHash, big.NewInt(balance), bind)
 	return input
 
 }
 
-func (b *BscSender) buildSignedSwapOutTx(from, bind, key string) (rawTx interface{}, txHash string, err error) {
+func (b *BscSender) buildSignedSwapOutTx(from, bind, key string, balance int64) (rawTx interface{}, txHash string, err error) {
 
-	input := b.buildSwapOutTxInput(bind)
+	input := b.buildSwapOutTxInput(bind, balance)
 
 	args := b.buildTxArgs(from, b.tokenConfig.ContractAddress, big.NewInt(0), &input)
 	tx, err := b.buildTx(args)
@@ -409,10 +413,10 @@ func (b *BscSender) BalanceScan(ctx context.Context) {
 			}
 			fbalance := toDcrnCoin(balance.Int64())
 			log.Debugf("[BalanceScan] update balance success, address: %v, balance: %v \n", addr, fbalance)
-			time.Sleep(time.Millisecond * 100)
+			time.Sleep(time.Millisecond * time.Duration(b.scanBalancePerTimeMill))
 		}
 		log.Info("[BalanceScan] update balance finished")
-		time.Sleep(time.Second * 20)
+		time.Sleep(time.Second * time.Duration(b.scanBalanceInterval))
 	}
 
 }
@@ -434,37 +438,40 @@ func (b *BscSender) findAddrToSwapOut1() ([]*types.AddressInfo, []string, error)
 	binds := make([]string, 0)
 	for _, addr := range AddrInfo {
 		//获取余额的方式，到后面这里可以直接查库
-		balance, err := b.bscBridge.GetErc20Balance(b.tokenConfig.ContractAddress, addr.Address)
+		balanceDcrn, err := b.bscBridge.GetErc20Balance(b.tokenConfig.ContractAddress, addr.Address)
 		if err != nil {
 			log.Errorf("get erc2o balance fail, addr : %v\n", addr)
 			continue
 		}
 
-		if balance.Int64() != addr.Balance {
+		if balanceDcrn.Int64() != addr.Balance {
 
-			err := b.db.UpdateAddrBalance(balance.Int64(), addr.Address)
+			err := b.db.UpdateAddrBalance(balanceDcrn.Int64(), addr.Address)
 			if err != nil {
 				log.Errorf("update balance err %v\n", err)
 				continue
 			}
-			if addr.Balance < balance.Int64() {
+			if addr.Balance < balanceDcrn.Int64() {
 				continue
 			}
 		}
 
 		//查询gas费是否够用
-		balance, err = b.bscBridge.GetBalance(addr.Address)
+		balanceBnb, err := b.bscBridge.GetBalance(addr.Address)
 		if err != nil {
 			log.Errorf("get bnb balance fail, addr : %v\n", addr)
 			continue
 		}
 		gas, _ := b.calculateGas()
-		if balance.Cmp(gas) < 0 {
+		if gas == nil {
+			continue
+		}
+		if balanceBnb.Cmp(gas) < 0 {
 			GasCh <- addr.Address
 			continue
 		}
 
-		if balance.Cmp(minSwap) < 0 {
+		if balanceDcrn.Cmp(minSwap) < 0 {
 			continue
 		}
 		//bind
@@ -476,6 +483,7 @@ func (b *BscSender) findAddrToSwapOut1() ([]*types.AddressInfo, []string, error)
 		toInfo := &types.AddressInfo{
 			Address: addr.Address,
 			Key:     addr.Key,
+			Balance: balanceDcrn.Int64(),
 		}
 		toAddressInfo = append(toAddressInfo, toInfo)
 		binds = append(binds, from)

@@ -9,8 +9,6 @@ import (
 	"github.com/anyswap/CrossChain-Bridge/tools/crypto"
 )
 
-const MAXBSCACCONTS = 10
-
 func BscAccountInit(chainDB *db.CrossChainDB) {
 
 	err := chainDB.CreateTable(ddl.BscAddressesTableName, ddl.CreateAddressTable)
@@ -24,7 +22,7 @@ func BscAccountInit(chainDB *db.CrossChainDB) {
 		log.Errorf("BscAccountInit RetrieveBalanceIndexCount err %v\n", err)
 		return
 	}
-	for i := count; i < MAXBSCACCONTS; i++ {
+	for i := count; i < AutoSwapConf.MaxBscAccount; i++ {
 
 		key, addr, err := CreateKey()
 		if err != nil {
@@ -49,9 +47,7 @@ func CreateKey() (privs, addr string, err error) {
 		log.Error("CreateKey fail: ", "err", err)
 		return "", "", err
 	}
-	/*	//可通过此代码导入私钥
 
-	 */
 	privateKeyBytes := crypto.FromECDSA(privateKey)
 	priv := hexutil.Encode(privateKeyBytes)[2:]
 	publicKey := privateKey.Public()
@@ -60,7 +56,6 @@ func CreateKey() (privs, addr string, err error) {
 		log.Error("cannot assert type: publicKey is not of type *ecdsa.PublicKey")
 	}
 	address := crypto.PubkeyToAddress(*publicKeyECDSA).Hex()
-	//fmt.Println(address)
 	return priv, address, nil
 }
 

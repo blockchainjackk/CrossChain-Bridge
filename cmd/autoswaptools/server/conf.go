@@ -23,16 +23,31 @@ var (
 	loadConfigStarter sync.Once
 )
 
-const PairID = "dcrn"
-
 type autoSwapConf struct {
 	SwapServer       string
 	Account          string
 	BridgeConfigFile string
 	TokenConfigFile  string
-	BridgeConfig     *params.BridgeConfig
-	Db               *db.CrossChainDB
-	TokenPairConfig  *tokens.TokenPairConfig
+
+	GasDistributeAddress string
+	GasDistributeKey     string
+
+	DistributeDcrnInterval    int64
+	DistributeSwapOutInterval int64
+
+	SwapInPerTxInterval int64
+	SwapInInterval      int64
+
+	SwapOutInterval int64
+
+	ScanBalanceInterval    int64
+	ScanBalancePerTimeMill int64
+
+	MaxBscAccount int64
+
+	BridgeConfig    *params.BridgeConfig
+	Db              *db.CrossChainDB
+	TokenPairConfig *tokens.TokenPairConfig
 }
 
 var AutoSwapConf *autoSwapConf

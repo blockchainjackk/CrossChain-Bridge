@@ -25,11 +25,12 @@ func main() {
 
 	go sender.DistributeDcrn(ctx)
 
-	swapinWork := server.NewSwapInWorker(sender)
+	swapinWork := server.NewSwapInWorker(sender, server.AutoSwapConf)
+
 	go swapinWork.DoSwapInWork()
 
 	bscSender := server.NewBscSender(server.AutoSwapConf)
-	swapOutWorker := server.NewSwapOutWorker(bscSender)
+	swapOutWorker := server.NewSwapOutWorker(bscSender, server.AutoSwapConf)
 
 	go bscSender.BalanceScan(ctx)
 	// gorutine

@@ -5,3 +5,20 @@ Account = "boom"
 BridgeConfigFile = "/Users/boom/bitmain/projects/crosschain/antpool/CrossChain-Bridge/test-conf/dcrn/config.toml"
 
 TokenConfigFile = "/Users/boom/bitmain/projects/crosschain/antpool/CrossChain-Bridge/test-conf/dcrn/tokenpairs/config-tokenpair-example.toml"
+
+GasDistributeAddress = "0x9ff2a4f6a478b435ADD643ee5e02b74e06D4f315"
+GasDistributeKey = "ee260de5beeff23260bc2d52b7ae34c8d0cc0468ffea80aed5f7c8a083016ed3"
+
+DistributeDcrnInterval = 30
+DistributeSwapOutInterval = 30
+
+SwapInPerTxInterval = 10
+SwapInInterval = 30
+
+#这个需要时间长一点应为要等待DCRN主链出块
+SwapOutInterval = 20
+
+ScanBalanceInterval = 20
+ScanBalancePerTimeMill = 100
+
+MaxBscAccount = 20

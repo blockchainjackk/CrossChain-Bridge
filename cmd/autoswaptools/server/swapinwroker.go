@@ -9,15 +9,14 @@ import (
 	"time"
 )
 
-//todo
-const SwapInPerTxInterval = time.Second * 10
-const SwapInInterval = time.Second * 30
 const swapInApiParams = `/swapindcrn/post`
 
 var GasCh = make(chan string)
 
 type SwapinWorker struct {
-	dcrnsender *DcrnSender
+	swapInPerTxInterval int64
+	swapInInterval      int64
+	dcrnsender          *DcrnSender
 }
 
 type swapInRequest struct {
@@ -27,10 +26,12 @@ type swapInRequest struct {
 	SignInfo    string `json:"signMsg"`
 }
 
-func NewSwapInWorker(d *DcrnSender) *SwapinWorker {
+func NewSwapInWorker(d *DcrnSender, conf *autoSwapConf) *SwapinWorker {
 
 	return &SwapinWorker{
-		dcrnsender: d,
+		dcrnsender:          d,
+		swapInInterval:      conf.SwapInInterval,
+		swapInPerTxInterval: conf.SwapInPerTxInterval,
 	}
 }
 
@@ -62,7 +63,7 @@ func (s *SwapinWorker) DoSwapInWork() {
 			return
 		}
 		if len(toAddrs) == 0 {
-			time.Sleep(SwapInInterval)
+			time.Sleep(time.Second * time.Duration(s.swapInInterval))
 			continue
 		}
 		if txAmount > len(toAddrs) {
@@ -113,7 +114,7 @@ func (s *SwapinWorker) DoSwapInWork() {
 			} else {
 				log.Warnf("[DoSwapInWork] swapin  fail: %v ,tx : %v, fromAddress : %v, toAddress : %v, msg : %v\n", str, tx, fromAddress, toAddress.Address, msg)
 			}
-			time.Sleep(SwapInPerTxInterval)
+			time.Sleep(time.Second * time.Duration(s.swapInPerTxInterval))
 		}
 
 	}

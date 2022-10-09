@@ -9,18 +9,18 @@ import (
 	"time"
 )
 
-// 这个需要时间长一点应为要等待DCRN主链出块
-const DefaultSwapOutInterval = time.Second * 20
 const swapOutApiParams = `/swapout/post/DCRN/`
 
 type SwapOutWorker struct {
-	bscSender *BscSender
+	bscSender       *BscSender
+	swapOutInterval int64
 }
 
-func NewSwapOutWorker(b *BscSender) *SwapOutWorker {
+func NewSwapOutWorker(b *BscSender, conf *autoSwapConf) *SwapOutWorker {
 
 	return &SwapOutWorker{
-		bscSender: b,
+		bscSender:       b,
+		swapOutInterval: conf.SwapOutInterval,
 	}
 }
 
@@ -35,6 +35,7 @@ func (s *SwapOutWorker) DoSwapOutWork(ctx context.Context) {
 			return
 		}
 		txAmount := len(txs)
+		log.Infof("[DoSwapOutWork] find %v txs to send swap out request\n", txAmount)
 		if txAmount == 0 {
 			time.Sleep(time.Second * 10)
 			continue
@@ -68,7 +69,8 @@ func (s *SwapOutWorker) DoSwapOutWork(ctx context.Context) {
 			} else {
 				log.Warnf("[DoSwapOutWork] swapout  fail: %v, hash: %v\n", str, tx)
 			}
-			time.Sleep(DefaultSwapOutInterval)
+			time.Sleep(time.Second * time.Duration(s.swapOutInterval))
+
 		}
 
 	}
