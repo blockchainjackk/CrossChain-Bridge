@@ -6,14 +6,11 @@ import (
 )
 
 var (
-	DefaultDBHost  = "127.0.0.1"
-	DefaultDBPort  = "5432"
-	DefaultDBUser  = "postgres"
-	DefaultDBPass  = "a260312953"
-	DefaultDBName  = "autoswap"
-	DefaultTimeOut = 20
-
-	DefaultEnableSSL = false
+	DefaultDBHost = "127.0.0.1"
+	DefaultDBPort = "5432"
+	DefaultDBUser = "postgres"
+	DefaultDBPass = "a260312953"
+	DefaultDBName = "autoswap"
 )
 
 type CrossChainDB struct {

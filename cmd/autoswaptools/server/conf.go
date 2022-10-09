@@ -45,6 +45,12 @@ type autoSwapConf struct {
 
 	MaxBscAccount int64
 
+	DBHost string
+	DBPort string
+	DBUser string
+	DBPass string
+	DBName string
+
 	BridgeConfig    *params.BridgeConfig
 	Db              *db.CrossChainDB
 	TokenPairConfig *tokens.TokenPairConfig
@@ -126,12 +132,13 @@ func autoSwapDcrn(ctx *cli.Context) error {
 
 	//tokenConfigDir := ctx.String(tokenConfigDirFlag.Name)
 	configFile := ctx.String(configFileFlag.Name)
-	db, err := db.NewCrossChainDB(db.DefaultDBHost, db.DefaultDBPort, db.DefaultDBUser, db.DefaultDBPass, db.DefaultDBName)
+
+	LoadConfig(configFile)
+	db, err := db.NewCrossChainDB(AutoSwapConf.DBHost, AutoSwapConf.DBPort, AutoSwapConf.DBUser, AutoSwapConf.DBPass, AutoSwapConf.DBName)
 	if err != nil {
 		log.Errorf("autoSwapDcrn NewChainDB err %v\n", err)
 		return err
 	}
-	LoadConfig(configFile)
 	AutoSwapConf.Db = db
 	//config := params.LoadConfig(bridgeconfigFile, true)
 	//tokenPairConfigMap, err := tokens.LoadTokenPairsConfigInDir(tokenConfigDir, false)
