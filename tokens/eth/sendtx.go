@@ -2,6 +2,7 @@ package eth
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/anyswap/CrossChain-Bridge/log"
 	"github.com/anyswap/CrossChain-Bridge/params"
@@ -17,7 +18,9 @@ func (b *Bridge) SendTransaction(signedTx interface{}) (txHash string, err error
 	}
 	txHash, err = b.SendSignedTransaction(tx)
 	if err != nil {
-		log.Info("SendTransaction failed", "hash", txHash, "err", err)
+		if !strings.Contains(err.Error(), "json-rpc error -32000, already known") {
+			log.Error("SendTransaction failed", "hash", txHash, "err", err)
+		}
 	} else {
 		log.Info("SendTransaction success", "hash", txHash)
 	}

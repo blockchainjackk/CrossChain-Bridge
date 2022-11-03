@@ -300,6 +300,8 @@ func sendTxLoopUntilSuccess(bridge tokens.CrossChainBridge, txHash string, signe
 	if sendTxLoopInterval == 0 {
 		sendTxLoopInterval = 10
 	}
+	alreadySendMsg := "rpc query error: call 'eth_sendRawTransaction []' failed, err='return error: json-rpc error -32000, already known'"
+
 	txid, pairID, bind := args.SwapID, args.PairID, args.Bind
 	for loop := 1; loop <= sendTxLoopCount; loop++ {
 
@@ -316,7 +318,9 @@ func sendTxLoopUntilSuccess(bridge tokens.CrossChainBridge, txHash string, signe
 		}
 		_, err = bridge.SendTransaction(signedTx)
 		if err != nil {
-			logWorkerError("sendtx", "send tx in loop failed", err, "swapID", txid, "txHash", txHash, "loop", loop)
+			if err.Error() != alreadySendMsg {
+				logWorkerError("sendtx", "send tx in loop failed", err, "swapID", txid, "txHash", txHash, "loop", loop)
+			}
 		} else {
 			logWorker("sendtx", "send tx in loop done", "swapID", txid, "txHash", txHash, "loop", loop)
 		}

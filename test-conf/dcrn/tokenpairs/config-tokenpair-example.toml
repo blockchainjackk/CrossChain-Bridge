@@ -12,12 +12,11 @@ Description = "DCRN Coin"
 # if ID is ERC20, this is the erc20 token's contract address
 ContractAddress = ""
 # deposit to this address to make swap
-DepositAddress = "SccW2X8WJBkPep9fqx7G1ssyBMRaX5w3rjz"
+DepositAddress = "ScuM2dPdzioAoHuQry3tPcFJ5d7AVsakTbK"
 # dcrm
 DcrmAddressPriKey = "PsUQPn498jvZCXboqxdXD8MjQqQunWCiiHywt3XrNR3A7FzsDpwof"
-
 # withdraw from this address
-DcrmAddress = "SccW2X8WJBkPep9fqx7G1ssyBMRaX5w3rjz"
+DcrmAddress = "ScuM2dPdzioAoHuQry3tPcFJ5d7AVsakTbK"
 # dcrm address public key
 DcrmPubkey = ""
 # maximum deposit value
@@ -53,12 +52,11 @@ ID = "bDCRN"
 Name = "bDCRN"
 Symbol = "bDCRN"
 Decimals = 8
-Description = "cross chain bridge DCRN with anyBTC"
+Description = "cross chain bridge DCRN with DCRN"
 # mapping erc20 token address
-#ContractAddress = "0x1eE6e5f1f818a8cE2668D76Fb6Bb205b8159126D"
 ContractAddress = "0xc5D9da57549A143a52F98107A73eaf9108B1111c"
 
-# mapping erc20 token creator (account4)
+# mapping erc20 token creator
 DcrmAddress = "0x040C22254EE46d612978496283d2565e39b817e0"
 # priky  as DCRM
 DcrmAddressPriKey = "47f909f570c10408b254ca6c11f0935fb65e0f2379e752ddfccd9a475691e43e"
@@ -77,7 +75,7 @@ MaximumSwapFee = 50.0
 MinimumSwapFee = 0.05
 # plus this percentage of gas price to make tx more easier to be mined in dest chain
 # corresponding to send mapping token on dest chain (eg. mBTC) for depositing
-PlusGasPricePercentage = 1 # plus 1% gas price
+PlusGasPricePercentage = 15 # plus 1% gas price
 # if withdraw value is larger than this value then need more verify strategy
 BigValueThreshold = 500000.0
 # disable withdraw function if this flag is true

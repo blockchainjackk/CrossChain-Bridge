@@ -63,7 +63,7 @@ EstimateFeeBlocks = 6
 UtxoAggregateMinCount = 20
 # aggregate if have more than so many value
 UtxoAggregateMinValue = 1000000 # unit satoshi
-# aggreate to this address #todo
+# aggreate to this address #no use
 UtxoAggregateToAddress = "mfwPnCuht2b4Lvb5XTds4Rvzy3jZ2ZWrBL"
 
 # extra config
@@ -153,6 +153,8 @@ MaxReplaceCount = 20
 #FixedGasPrice = "6000000001"
 # maximum gas price
 MaxGasPrice = "50000000000"
+# minmum gas price
+MinGasPrice = "6000000000"
 # minimum reserve coin for gas provide (defaults to 1e17 wei)
 MinReserveFee = "100000000000000000"
 # dynamic fee tx related (EIP-1559)

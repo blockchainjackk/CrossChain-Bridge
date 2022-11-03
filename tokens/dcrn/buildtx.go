@@ -292,9 +292,7 @@ func (b *Bridge) selectUtxos(from string, target dcrnAmountType) (detail *txauth
 			continue
 		}
 		output := tx.Vout[*utxo.Vout]
-		//if *output.ScriptpubkeyType != p2pkhType && *output.ScriptpubkeyType != p2shType {
-		//	continue
-		//}
+
 		var scriptSize int
 
 		switch *output.ScriptpubkeyType {

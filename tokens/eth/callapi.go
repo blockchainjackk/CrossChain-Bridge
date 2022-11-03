@@ -387,6 +387,7 @@ func (b *Bridge) SendSignedTransaction(tx *types.Transaction) (txHash string, er
 	go func() {
 		wg.Wait()
 		close(ch)
+		//todo
 		log.Info("call eth_sendRawTransaction finished", "txHash", txHash)
 	}()
 	for _, url := range gateway.APIAddress {
@@ -415,6 +416,10 @@ func sendRawTransaction(wg *sync.WaitGroup, hexData string, url string, ch chan<
 	var result string
 	err := client.RPCPost(&result, url, "eth_sendRawTransaction", hexData)
 	if err != nil {
+		if err.Error() == "return error: json-rpc error -32000, already known" {
+			ch <- &sendTxResult{result, err}
+			return
+		}
 		log.Trace("call eth_sendRawTransaction failed", "txHash", result, "url", url, "err", err)
 	} else {
 		log.Trace("call eth_sendRawTransaction success", "txHash", result, "url", url)
