@@ -47,7 +47,7 @@ func startSwapinVerifyJob() {
 					errors.Is(err, tokens.ErrUnknownPairID),
 					errors.Is(err, tokens.ErrSwapIsClosed):
 					if errors.Is(err, tokens.ErrTxNotStable) {
-						logWorkerWarn("verify", "process swapin verify error", err, "txid", swap.TxID, "bind", swap.Bind, "from", swap.From)
+						logWorkerWarn("verify", "process swapin verify error", err.Error(), "txid", swap.TxID, "bind", swap.Bind, "from", swap.From)
 					}
 				default:
 					logWorkerError("verify", "process swapin verify error", err, "txid", swap.TxID, "bind", swap.Bind, "from", swap.From)
