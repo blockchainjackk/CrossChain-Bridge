@@ -111,7 +111,9 @@ func RPCPostRequestWithContext(ctx context.Context, url string, req *Request, re
 	}
 	resp, err := HTTPPostWithContext(ctx, url, reqBody, nil, nil, req.Timeout)
 	if err != nil {
-		log.Trace("post rpc error", "url", url, "request", req, "err", err)
+		if !strings.Contains(err.Error(), "json-rpc error -32000, already known") {
+			log.Trace("post rpc error", "url", url, "request", req, "err", err)
+		}
 		return err
 	}
 	err = getResultFromJSONResponse(result, resp)

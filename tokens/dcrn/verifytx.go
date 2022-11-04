@@ -46,7 +46,8 @@ func (b *Bridge) GetTransactionStatus(txHash string) (*tokens.TxStatus, error) {
 		latest, errt := b.GetLatestBlockNumber()
 		if errt == nil {
 			if latest > txStatus.BlockHeight {
-				txStatus.Confirmations = latest - txStatus.BlockHeight
+				//爆块就相当于 Confirmations=1
+				txStatus.Confirmations = latest - txStatus.BlockHeight + 1
 			}
 		}
 	}

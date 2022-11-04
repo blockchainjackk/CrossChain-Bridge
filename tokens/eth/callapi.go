@@ -6,6 +6,7 @@ import (
 	"math/big"
 	"sort"
 	"sync"
+	"time"
 
 	"github.com/anyswap/CrossChain-Bridge/common"
 	"github.com/anyswap/CrossChain-Bridge/common/hexutil"
@@ -392,9 +393,11 @@ func (b *Bridge) SendSignedTransaction(tx *types.Transaction) (txHash string, er
 	}()
 	for _, url := range gateway.APIAddress {
 		go sendRawTransaction(wg, hexData, url, ch)
+		time.Sleep(500 * time.Millisecond)
 	}
 	for _, url := range gateway.APIAddressExt {
 		go sendRawTransaction(wg, hexData, url, ch)
+		time.Sleep(500 * time.Millisecond)
 	}
 	for i := 0; i < urlCount; i++ {
 		res := <-ch
