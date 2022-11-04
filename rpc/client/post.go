@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/anyswap/CrossChain-Bridge/log"
 )
@@ -115,7 +116,9 @@ func RPCPostRequestWithContext(ctx context.Context, url string, req *Request, re
 	}
 	err = getResultFromJSONResponse(result, resp)
 	if err != nil {
-		log.Trace("post rpc error", "url", url, "request", req, "err", err)
+		if !strings.Contains(err.Error(), "json-rpc error -32000, already known") {
+			log.Trace("post rpc error", "url", url, "request", req, "err", err)
+		}
 	}
 	return err
 }
