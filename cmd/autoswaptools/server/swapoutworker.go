@@ -43,7 +43,16 @@ func (s *SwapOutWorker) DoSwapOutWork(ctx context.Context) {
 
 		for _, tx := range txs {
 
-			//todo 判断交易是否成熟
+			//判断交易是否成熟
+			status, err := s.bscSender.bscBridge.GetTransactionStatus(tx)
+			if err != nil {
+				log.Error("[DoSwapOutWork] get tx status fail : ", "err", err)
+				continue
+			}
+			if status.Confirmations < *s.bscSender.bscBridge.ChainConfig.Confirmations {
+				fmt.Println("3333333")
+				continue
+			}
 
 			//2、发送跨链交易
 			swapOutUrl := s.bscSender.swapServer + swapOutApiParams + tx

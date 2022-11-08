@@ -45,6 +45,6 @@ var (
 	configFileFlag = &cli.StringFlag{
 		Name:  "configFile",
 		Usage: "dcrn auto swap config file",
-		Value: "./config.toml",
+		Value: "./config_main.toml",
 	}
 )

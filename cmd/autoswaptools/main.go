@@ -30,15 +30,15 @@ func main() {
 	go swapinWork.DoSwapInWork()
 
 	bscSender := server.NewBscSender(server.AutoSwapConf)
-	swapOutWorker := server.NewSwapOutWorker(bscSender, server.AutoSwapConf)
+	//swapOutWorker := server.NewSwapOutWorker(bscSender, server.AutoSwapConf)
 
 	go bscSender.BalanceScan(ctx)
 	// gorutine
-	go bscSender.DistributeSwapOut(ctx)
+	//go bscSender.DistributeSwapOut(ctx)
 
-	go bscSender.DistributeGas(server.GasCh, ctx)
+	//go bscSender.DistributeGas(server.GasCh, ctx)
 
-	go swapOutWorker.DoSwapOutWork(ctx)
+	//go swapOutWorker.DoSwapOutWork(ctx)
 
 	select {}
 

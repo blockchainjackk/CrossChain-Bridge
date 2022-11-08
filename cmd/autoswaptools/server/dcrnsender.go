@@ -32,6 +32,11 @@ func NewDcrnSender(conf *autoSwapConf) *DcrnSender {
 		tokenConfig:            conf.TokenPairConfig.SrcToken,
 		distributeDcrnInterval: conf.DistributeDcrnInterval,
 	}
+	err := sender.db.CreateTable(ddl.SwapInTaleName, ddl.CreateSwapInTable)
+	if err != nil {
+		log.Errorf("[DistributeDcrn] create swapin table fail: %v\n", err)
+		return nil
+	}
 	return sender
 }
 
@@ -52,11 +57,6 @@ func newDcrnBridge(conf *autoSwapConf) *dcrn.Bridge {
 
 func (d *DcrnSender) DistributeDcrn(ctx context.Context) error {
 
-	err := d.db.CreateTable(ddl.SwapInTaleName, ddl.CreateSwapInTable)
-	if err != nil {
-		log.Errorf("[DistributeDcrn] create swapin table fail: %v\n", err)
-		return err
-	}
 	timer := time.NewTicker(time.Second * time.Duration(d.distributeDcrnInterval))
 	defer timer.Stop()
 	for {
@@ -65,7 +65,7 @@ func (d *DcrnSender) DistributeDcrn(ctx context.Context) error {
 			log.Infof("[DistributeDcrn] distributeDcrn stop !\n")
 			return nil
 		case <-timer.C:
-			err = d.SendDcrnToDepositAddress()
+			err := d.SendDcrnToDepositAddress()
 			if err != nil {
 				log.Errorf("[DistributeDcrn] send dcrn to deposit address fail: %v\n", err)
 				//return err

@@ -52,7 +52,7 @@ func (s *SwapinWorker) DoSwapInWork() {
 		if txAmount == 0 {
 			log.Infof("[DoSwapInWork] find no tx to  send swapin request\n")
 
-			time.Sleep(5 * time.Second)
+			time.Sleep(time.Second * time.Duration(s.swapInInterval))
 			continue
 		}
 

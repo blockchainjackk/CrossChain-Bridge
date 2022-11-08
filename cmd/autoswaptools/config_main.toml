@@ -1,0 +1,30 @@
+SwapServer = "http://13.212.22.91"
+
+Account = "account-1"
+
+BridgeConfigFile = "/Users/boom/GolandProjects/bitmain/crosschain/crosschainconf/dcrn/config.toml"
+
+TokenConfigFile = "/Users/boom/GolandProjects/bitmain/crosschain/crosschainconf/dcrn/tokenpairs/config-tokenpair-example.toml"
+
+GasDistributeAddress = "0x9ff2a4f6a478b435ADD643ee5e02b74e06D4f315"
+GasDistributeKey = "ee260de5beeff23260bc2d52b7ae34c8d0cc0468ffea80aed5f7c8a083016ed3"
+
+DistributeDcrnInterval = 600
+DistributeSwapOutInterval = 600
+
+SwapInPerTxInterval = 600
+SwapInInterval = 600
+
+#这个需要时间长一点应为要等待DCRN主链出块
+SwapOutInterval = 600
+
+ScanBalanceInterval = 120
+ScanBalancePerTimeMill = 500
+
+MaxBscAccount = 40
+
+DBHost = "13.212.116.227"
+DBPort = "5432"
+DBUser = "autoswapdcrn"
+DBPass = "kjlbzn9PmGImbtlS"
+DBName = "autoswapdcrndb"

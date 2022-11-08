@@ -111,7 +111,7 @@ func (b *BscSender) sendGas2Address(from string, key string, to string) error {
 		if hash != "" && err == nil {
 			log.Infof("[sendGas2Address] send gas tx success , from : %v, to : %v, hash : %v\n", from, to, hash)
 			//todo  应该将失败的地址检查一下地址余额，然后再发送的channel中重新发送
-			GasCh <- to
+			//GasCh <- to
 			break
 		}
 
@@ -215,6 +215,7 @@ func (b *BscSender) DistributeSwapOut(ctx context.Context) {
 			}
 			time.Sleep(time.Second * time.Duration(b.distributeSwapOutInterval))
 		}
+		time.Sleep(time.Second * time.Duration(b.distributeSwapOutInterval))
 	}
 }
 
@@ -498,5 +499,9 @@ func (b *BscSender) findTxs2SwapOut() ([]string, error) {
 	return txs, err
 }
 func (b *BscSender) updateSwapOutTxStatus(tx string, status int64) error {
+	return b.db.UpdateSwapOutStatus(tx, status)
+}
+
+func (b *BscSender) getSwapOutTxStatus(tx string, status int64) error {
 	return b.db.UpdateSwapOutStatus(tx, status)
 }
